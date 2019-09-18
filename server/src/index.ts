@@ -4,14 +4,13 @@ import api from "./router";
 
 const app = new Koa();
 
-// app.use(KoaBody({
-//   multipart: true,
-//   formidable: {
-//     uploadDir: __dirname + "/uploads/",
-//   },
-// }));
+app.use(KoaBody({
+  multipart: true,
+  formidable: {
+    uploadDir: __dirname + "/uploads",
+  },
+}));
 
-app.use(KoaBody());
 app.use(api.routes());
 app.use(api.allowedMethods());
 

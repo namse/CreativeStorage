@@ -5,7 +5,7 @@ const router = new Router();
 
 const readFile = () => {
   return new Promise((resolve, reject) => {
-    fs.readFile(__dirname + "/uploads/data", "utf8", (err, data) => {
+    fs.readFile(__dirname + "/uploads/data", (err, data) => {
       if (err) {
          reject(err);
       } else {
@@ -17,7 +17,7 @@ const readFile = () => {
 
 const writeFile = (data: Buffer) => {
   return new Promise((resolve, reject) => {
-    fs.writeFile(__dirname + "/uploads/data", data, "utf8", (err) => {
+    fs.writeFile(__dirname + "/uploads/data", data, (err) => {
       if (err) {
         reject(err);
       } else {
@@ -29,9 +29,9 @@ const writeFile = (data: Buffer) => {
 
 router.post("/uploadFile", async (ctx) => {
   ctx.status = 200;
-  const obj = ctx.request.body;
+  const obj = ctx.request.body.file;
   console.log('ctx.request.body',obj);
-  await writeFile(obj.file);
+  await writeFile(obj);
   ctx.body = "uploadFile";
 });
 

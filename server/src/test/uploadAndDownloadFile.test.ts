@@ -33,14 +33,14 @@ async function downloadFile(filename: string): Promise<Buffer> {
 test("upload and download file", async () => {
     // tslint:disable-next-line: max-line-length
     const imageInBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-    const imageBuffer = Buffer.from(imageInBase64, "base64");
+    const imageBuffer = Buffer.from(imageInBase64);
 
     const filename = uuid();
 
     await uploadFile(filename, imageBuffer);
 
     const downloadedFile = await downloadFile(filename);
-    const downloadedFileInBase64 = downloadedFile.toString("base64");
+    const downloadedFileInBase64 = downloadedFile.toString();
     expect(downloadedFileInBase64).toEqual(imageInBase64);
 });
 
