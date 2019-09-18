@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 import FormData from "form-data";
 import uuid from "uuid/v4";
 
-async function uploadFile(filename: string, file: Buffer): Promise<void> {
+async function uploadFile(filename: string, file: string): Promise<void> {
     const form = new FormData();
     form.append("file", file);
 
@@ -33,14 +33,14 @@ async function downloadFile(filename: string): Promise<Buffer> {
 test("upload and download file", async () => {
     // tslint:disable-next-line: max-line-length
     const imageInBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-    const imageBuffer = Buffer.from(imageInBase64);
+    // const imageBuffer = Buffer.from(imageInBase64, "base64");
 
     const filename = uuid();
 
-    await uploadFile(filename, imageBuffer);
+    await uploadFile(filename, imageInBase64);
 
     const downloadedFile = await downloadFile(filename);
-    const downloadedFileInBase64 = downloadedFile.toString();
+    const downloadedFileInBase64 = downloadedFile.toString("base64");
     expect(downloadedFileInBase64).toEqual(imageInBase64);
 });
 

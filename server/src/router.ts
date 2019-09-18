@@ -31,12 +31,12 @@ router.post("/uploadFile", async (ctx) => {
   ctx.status = 200;
   const obj = ctx.request.body.file;
   console.log('ctx.request.body',obj);
-  await writeFile(obj);
+  await writeFile(Buffer.from(obj, "base64"));
   ctx.body = "uploadFile";
 });
 
 router.get("/downloadFile", async (ctx) => {
-    console.log("다운로드!!");
+    // console.log("다운로드!!");
     ctx.status = 200;
     ctx.body = await readFile();
 });
@@ -44,7 +44,7 @@ router.get("/downloadFile", async (ctx) => {
 router.get("/", async (ctx) => {
   // i don't know what to do
   ctx.status = 200;
-  ctx.body = "루트 경로!";
+  ctx.body = "root path";
 });
 
 export default router;
