@@ -1,0 +1,11 @@
+
+- Create class for storage service
+  - class StorageService
+  - methods
+    - `writeFile(filename: string, file: Buffer): Promise<void>`
+    - `readFile(filename: string): Promise<Buffer>`
+    - `listFiles(): Promise<FileMetadata>`
+- Use it instead of fs in api router
+- Test all methods
+  - Not method by method. You can test at once!
+    - Coverage is important than number of test.
