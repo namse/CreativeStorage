@@ -4,7 +4,7 @@ import * as fs from "fs";
 
 const router = new Router();
 
-const readFile = (filename: string) => {
+function readFile(filename: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     fs.readFile(`${__dirname}/uploads/${filename}`, (err, data) => {
       if (err) {
@@ -14,9 +14,9 @@ const readFile = (filename: string) => {
       }
     });
   });
-};
+}
 
-const renameFile = (path: string, filename: string) => {
+function renameFile(path: string, filename: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     fs.rename(path, `${__dirname}/uploads/${filename}`, (err) => {
       if (err) {
@@ -26,26 +26,25 @@ const renameFile = (path: string, filename: string) => {
       }
     });
   });
-};
+}
 
 router.post("/uploadFile", async (ctx: Koa.Context, next) => {
   try {
-    await renameFile(ctx.request.files.file.path, ctx.request.files.file.name);
+    if (ctx.request.files) {
+      await renameFile(ctx.request.files.file.path, ctx.request.files.file.name);
+    }
     ctx.status = 200;
   } catch (err) {
-    console.log(err.message);
-    ctx.status = 500;
+    ctx.app.emit("error", err, ctx);
   }
 });
 
-router.get("/downloadFile/:id", async (ctx: Koa.Context, next) => {
+router.get("/downloadFile", async (ctx: Koa.Context, next) => {
   try {
-    const filename = await ctx.params.id;
-    ctx.body = await readFile(filename);
+    ctx.body = await readFile(ctx.request.query.filename);
     ctx.status = 200;
   } catch (err) {
-    console.log(err.message);
-    ctx.status = 500;
+    ctx.app.emit("error", err, ctx);
   }
 });
 

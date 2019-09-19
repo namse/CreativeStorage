@@ -17,7 +17,8 @@ async function uploadFile(filename: string, file: Buffer): Promise<void> {
 }
 
 async function downloadFile(filename: string): Promise<Buffer> {
-    const uploadImageUrl = `http://localhost:4002/downloadFile/${filename}`;
+    const uploadImageUrl = `http://localhost:4002/downloadFile?filename=${filename}`;
+
     console.log("url: ", uploadImageUrl);
     const response = await fetch(uploadImageUrl);
 
