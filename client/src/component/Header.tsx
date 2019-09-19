@@ -25,12 +25,14 @@ export default class Header extends React.Component {
       "#upload-file",
     );
     if (inputElement !== null) {
-      const files: FileList = inputElement.files;
-      const len = files.length;
-      for (let i = 0; i < len; i++) {
-        this.uploadFileList = files;
+      const files: FileList | null = (inputElement as HTMLInputElement).files;
+      if (files !== null) {
+        const len = files.length;
+        for (let i = 0; i < len; i++) {
+          this.uploadFileList = files;
+        }
+        console.log(this.uploadFileList);
       }
-      console.log(this.uploadFileList);
     }
   };
 }
