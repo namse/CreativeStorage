@@ -1,12 +1,36 @@
 import * as React from "react";
-import PropTypes from "prop-types";
 
 export default class Header extends React.Component {
-  static propTypes = {
-    // prop: PropTypes,
-  };
+  public uploadFileList!: FileList;
 
-  render() {
-    return <div>hello world</div>;
+  public render() {
+    return (
+      <div>
+        {/* upload버튼 누르면 할 동적 uploadfile.ts */}
+        <form action="../share/uploadFile.ts" id="upload-form">
+          <input
+            type="file"
+            id="upload-file"
+            multiple
+            onChange={this.handleUploadFileChange}
+          ></input>
+          <input type="submit" value="upload"></input>
+        </form>
+      </div>
+    );
   }
+
+  private handleUploadFileChange = () => {
+    const inputElement: HTMLElement | null = document.querySelector(
+      "#upload-file",
+    );
+    if (inputElement !== null) {
+      const files: FileList = inputElement.files;
+      const len = files.length;
+      for (let i = 0; i < len; i++) {
+        this.uploadFileList = files;
+      }
+      console.log(this.uploadFileList);
+    }
+  };
 }

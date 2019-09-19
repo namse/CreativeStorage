@@ -1,21 +1,13 @@
 import * as React from "react";
-import fsExtra from "fs-extra";
-import fs from "fs";
-import formData from "form-data";
-
-const App = () => {
-  const downloadFile = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ): string => {
-    console.log("a");
-    const ret: string = "OK";
-    return ret;
-  };
-  return (
-    <div>
-      <button onClick={downloadFile}>download</button>
-    </div>
-  );
-};
-
-export default App;
+import Header from "./component/Header";
+import List from "./component/List";
+export default class App extends React.Component {
+  public render() {
+    return (
+      <div>
+        <Header />
+        <List />
+      </div>
+    );
+  }
+}
