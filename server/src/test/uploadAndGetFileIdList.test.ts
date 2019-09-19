@@ -38,7 +38,14 @@ test("upload and get list of files", async () => {
   });
 
   await Promise.all(imagesToBeUploadedInBuffer.map((el) => {
-    uploadFile(el.filename, el.imageBuffer);
+    return new Promise((resolve, reject) => {
+      try {
+        uploadFile(el.filename, el.imageBuffer);
+        resolve();
+      } catch {
+        reject();
+      }
+    });
   }));
 
   const fileIdList = await getFileIdList();
