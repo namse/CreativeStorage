@@ -8,6 +8,7 @@ const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
 app.use(
   koaBody({
     multipart: true,
+    includeUnparsed: true,
     formidable: {
       uploadDir: __dirname + "/uploads",
     },
