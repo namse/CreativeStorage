@@ -22,8 +22,9 @@ async function getFileIdList(): Promise<void> {
 
 }
 
-test("upload and get list of files", async () => {
+describe("upload and get list of files", async () => {
   // tslint:disable-next-line: max-line-length
+  // beforeEach(async () => {
   const imagesInBase64 = [
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==",
@@ -37,7 +38,7 @@ test("upload and get list of files", async () => {
     };
   });
 
-  await Promise.all(imagesToBeUploadedInBuffer.map((el) => {
+  const whoamI = await Promise.all(imagesToBeUploadedInBuffer.map((el) => {
     return new Promise((resolve, reject) => {
       try {
         uploadFile(el.filename, el.imageBuffer);
@@ -47,13 +48,17 @@ test("upload and get list of files", async () => {
       }
     });
   }));
-
+  console.log("------------------------------------------", imagesToBeUploadedInBuffer.map((el) => el.filename));
   const fileIdList = await getFileIdList();
+  console.log("fileIdList: ", fileIdList);
+
+  // });
+
   it("matches even if received contains additional elements", () => {
     expect(fileIdList).toEqual(expect.arrayContaining(imagesToBeUploadedInBuffer.map((el) => el.filename)));
   });
-  it("does not match if received does not contain expected elements", () => {
-    expect([imagesToBeUploadedInBuffer[0].filename, uuid()])
-      .not.toEqual(expect.arrayContaining(imagesToBeUploadedInBuffer.map((el) => el.filename)));
-  });
+  // it("does not match if received does not contain expected elements", () => {
+  //   expect([imagesToBeUploadedInBuffer[0].filename, uuid()])
+  //     .not.toEqual(expect.arrayContaining(imagesToBeUploadedInBuffer.map((el) => el.filename)));
+  // });
 });
