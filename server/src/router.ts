@@ -28,6 +28,7 @@ const renameFile = (path: string, filename: string) => {
   });
 };
 
+<<<<<<< HEAD
 const getFileList = () => {
   return new Promise((resolve, reject) => {
     fs.readdir(`${__dirname}/uploads/`, (err, data) => {
@@ -40,6 +41,8 @@ const getFileList = () => {
   });
 }
 
+=======
+>>>>>>> ac4184a5223c5f621747e2ae9d43634f71ae9b2d
 router.post("/uploadFile", async (ctx: Koa.Context, next) => {
   try {
     await renameFile(ctx.request.files.file.path, ctx.request.files.file.name);
@@ -61,6 +64,7 @@ router.get("/downloadFile/:id", async (ctx: Koa.Context, next) => {
   }
 });
 
+<<<<<<< HEAD
 router.get("/getFileIdList", async (ctx: Koa.Context, next) => {
   try {
     ctx.body = await getFileList();
@@ -72,4 +76,6 @@ router.get("/getFileIdList", async (ctx: Koa.Context, next) => {
   }
 });
 
+=======
+>>>>>>> ac4184a5223c5f621747e2ae9d43634f71ae9b2d
 export default router;
