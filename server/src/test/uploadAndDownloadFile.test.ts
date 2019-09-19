@@ -3,9 +3,9 @@ import fetch from "node-fetch";
 import FormData from "form-data";
 import uuid from "uuid/v4";
 
-async function uploadFile(filename: string, file: string): Promise<void> {
+async function uploadFile(filename: string, file: Buffer): Promise<void> {
     const form = new FormData();
-    form.append("file", file);
+    form.append("file", file, {filename});
 
     const uploadImageUrl = "http://localhost:4000/uploadFile";
     const response = await fetch(uploadImageUrl, {
@@ -19,7 +19,7 @@ async function uploadFile(filename: string, file: string): Promise<void> {
 }
 
 async function downloadFile(filename: string): Promise<Buffer> {
-    const uploadImageUrl = "http://localhost:4000/downloadFile";
+    const uploadImageUrl = `http://localhost:4000/downloadFile?filename=${filename}`;
     const response = await fetch(uploadImageUrl);
 
     if (!response.ok) {
@@ -33,11 +33,11 @@ async function downloadFile(filename: string): Promise<Buffer> {
 test("upload and download file", async () => {
     // tslint:disable-next-line: max-line-length
     const imageInBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-    // const imageBuffer = Buffer.from(imageInBase64, "base64");
+    const imageBuffer = Buffer.from(imageInBase64, "base64");
 
     const filename = uuid();
 
-    await uploadFile(filename, imageInBase64);
+    await uploadFile(filename, imageBuffer);
 
     const downloadedFile = await downloadFile(filename);
     const downloadedFileInBase64 = downloadedFile.toString("base64");
