@@ -42,8 +42,10 @@ const getFileList = () => {
 
 router.post("/uploadFile", async (ctx: Koa.Context, next) => {
   try {
-    await renameFile(ctx.request.files.file.path, ctx.request.files.file.name);
-    ctx.status = 200;
+    if(ctx.request.files){
+      await renameFile(ctx.request.files.file.path, ctx.request.files.file.name);
+      ctx.status = 200;
+    }
   } catch (err) {
     console.log(err.message);
     ctx.status = 500;

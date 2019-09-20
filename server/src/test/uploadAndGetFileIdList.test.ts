@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import FormData from "form-data";
 import uuid from "uuid/v4";
+import { doesNotReject } from "assert";
 
 async function uploadFile(filename: string, file: Buffer): Promise<void> {
   const form = new FormData();
@@ -22,9 +23,9 @@ async function getFileIdList(): Promise<void> {
 
 }
 
-describe("upload and get list of files", async () => {
+it("upload and get list of files", async () => {
   // tslint:disable-next-line: max-line-length
-  // beforeEach(async () => {
+
   const imagesInBase64 = [
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==",
@@ -38,7 +39,7 @@ describe("upload and get list of files", async () => {
     };
   });
 
-  const whoamI = await Promise.all(imagesToBeUploadedInBuffer.map((el) => {
+  await Promise.all(imagesToBeUploadedInBuffer.map((el) => {
     return new Promise((resolve, reject) => {
       try {
         uploadFile(el.filename, el.imageBuffer);
@@ -48,17 +49,17 @@ describe("upload and get list of files", async () => {
       }
     });
   }));
-  console.log("------------------------------------------", imagesToBeUploadedInBuffer.map((el) => el.filename));
   const fileIdList = await getFileIdList();
-  console.log("fileIdList: ", fileIdList);
 
+  // it("matches even if received contains additional elements", () => {
+  expect(fileIdList).toEqual(expect.arrayContaining(imagesToBeUploadedInBuffer.map((el) => el.filename)));
   // });
 
-  it("matches even if received contains additional elements", () => {
-    expect(fileIdList).toEqual(expect.arrayContaining(imagesToBeUploadedInBuffer.map((el) => el.filename)));
-  });
   // it("does not match if received does not contain expected elements", () => {
-  //   expect([imagesToBeUploadedInBuffer[0].filename, uuid()])
-  //     .not.toEqual(expect.arrayContaining(imagesToBeUploadedInBuffer.map((el) => el.filename)));
+  expect([imagesToBeUploadedInBuffer[0].filename, uuid()])
+    .not.toEqual(expect.arrayContaining(imagesToBeUploadedInBuffer.map((el) => el.filename)));
   // });
 });
+
+// console.log("------------------------------------------", imagesToBeUploadedInBuffer.map((el) => el.filename));
+// console.log("fileIdList: ", fileIdList);
