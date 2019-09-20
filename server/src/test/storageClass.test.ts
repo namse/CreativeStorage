@@ -38,7 +38,7 @@ async function getFileIdList() {
 
   if (!response.ok) {
     throw new Error(response.statusText);
-}
+  }
   const result = await response.json();
   return result;
 }
@@ -64,9 +64,7 @@ describe("storageClass test", () => {
     let fileIdList = await getFileIdList();
     let files = fileIdList.map( (value: string) => {
       return value.toString();
-    })
-
-    console.log(files);
+    });
 
     ( function () {
       return new Promise((resolve, reject) => {
@@ -78,7 +76,7 @@ describe("storageClass test", () => {
           }
         });
       })
-    })().then( (value) => {
+    })().then( (value: any ) => {
       expect(files).toEqual(value);
       done();
     })
