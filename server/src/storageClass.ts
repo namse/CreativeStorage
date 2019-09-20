@@ -32,7 +32,6 @@ class StorageClass {
         if (err) {
           reject(err);
         } else {
-          console.log('서버에요',data, typeof data);
           resolve(data);
         }
       });
