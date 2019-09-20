@@ -29,23 +29,15 @@ function renameFile(path: string, filename: string): Promise<Buffer> {
 }
 
 router.post("/uploadFile", async (ctx: Koa.Context, next) => {
-  try {
-    if (ctx.request.files) {
-      await renameFile(ctx.request.files.file.path, ctx.request.files.file.name);
-    }
-    ctx.status = 200;
-  } catch (err) {
-    ctx.app.emit("error", err, ctx);
+  if (ctx.request.files) {
+    await renameFile(ctx.request.files.file.path, ctx.request.files.file.name);
   }
+  ctx.status = 200;
 });
 
 router.get("/downloadFile", async (ctx: Koa.Context, next) => {
-  try {
-    ctx.body = await readFile(ctx.request.query.filename);
-    ctx.status = 200;
-  } catch (err) {
-    ctx.app.emit("error", err, ctx);
-  }
+  ctx.body = await readFile(ctx.request.query.filename);
+  ctx.status = 200;
 });
 
 export default router;
