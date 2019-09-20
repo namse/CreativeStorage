@@ -29,9 +29,13 @@ function renameFile(path: string, filename: string): Promise<Buffer> {
 }
 
 router.post("/uploadFile", async (ctx: Koa.Context, next) => {
-  if (ctx.request.files) {
-    await renameFile(ctx.request.files.file.path, ctx.request.files.file.name);
+  if (!ctx.request.files || !ctx.request.files.file) {
+    ctx.status = 400;
+    ctx.body = "request has no file";
+    return;
   }
+  const { path, name } = ctx.request.files.file;
+  await renameFile(path, name);
   ctx.status = 200;
 });
 
