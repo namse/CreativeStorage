@@ -8,14 +8,15 @@ app.use(koaBody({
   multipart: true,
 }));
 
-app.use(router.routes()).use(router.allowedMethods());
+app.use(router.routes());
+app.use(router.allowedMethods());
 app.use(async (ctx, next) => {
   ctx.status = 404;
 });
 
 app.on("error", (err, ctx) => {
-  console.log(err.message);
-  ctx.status(err.status || 500);
+  console.log(err);
+  ctx.status = 500;
 });
 
 app.listen(PORT, () => {
