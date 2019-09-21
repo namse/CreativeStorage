@@ -1,7 +1,5 @@
 import fetch from "node-fetch";
 import uuid from "uuid/v4";
-import fs from "fs";
-import path from "path";
 import { uploadFile } from "./uploadAndDownloadFile.test";
 
 type FileMetadata = {
