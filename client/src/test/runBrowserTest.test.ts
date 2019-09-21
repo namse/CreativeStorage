@@ -1,5 +1,5 @@
 import { startBundleSever, stopBundleServer } from "./browserTest/settings/bundleServer";
-import { testCaseNames } from "./browserTest/settings/BrowserTest";
+import { itTestCaseNames } from "./browserTest/settings/BrowserTest";
 
 describe("File Manager", () => {
   beforeAll(async () => {
@@ -19,9 +19,10 @@ describe("File Manager", () => {
     stopBundleServer();
   });
 
-  testCaseNames.forEach((testCaseName) => {
+  itTestCaseNames.forEach((testCaseName) => {
     it(testCaseName, async () => {
       await page.evaluate(`
+        console.log(runTest);
         runTest("${testCaseName}");
       `);
     });

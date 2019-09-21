@@ -1,6 +1,6 @@
-import { it } from "./settings/it";
+import { it, describe } from "./settings/it";
 import uuid from "uuid/v4";
-import IFileManager from "src/FileManager/IFileManager";
+import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
 import MockFileManager from "src/FileManager/MockFileManager";
 import expect from "expect";
 
@@ -11,19 +11,52 @@ function b64EncodeUnicode(value: string) {
     }));
 }
 
-async function generateTestBlob(content: string): Promise<Blob> {
+async function generateTestBlob(content: string = uuid()): Promise<Blob> {
   const url = `data:text/plain;base64,${b64EncodeUnicode(content)}`;
   const response = await fetch(url);
   return response.blob();
 }
 
-it("should upload file", async () => {
-  const filename = uuid();
-  const file = await generateTestBlob(filename);
+const testTargetFileManagers: IFileManager[] = [
+  new MockFileManager(),
+];
 
-  const fileManager: IFileManager = new MockFileManager();
+testTargetFileManagers.forEach((fileManager) => {
+  describe(`File Manager(${fileManager.constructor.name})`, () => {
+    it("should upload file without error", async () => {
+      const file = await generateTestBlob();
+      const filename = uuid();
 
-  await fileManager.uploadFile(filename, file);
+      await fileManager.uploadFile(filename, file);
+    });
 
-  expect(true).toBe(true);
+    it("should upload file and download", async () => {
+      const file = await generateTestBlob();
+      const filename = uuid();
+      await fileManager.uploadFile(filename, file);
+
+      const url = await fileManager.getDownloadUrl(filename);
+
+      const response = await fetch(url);
+      const blob = await response.blob();
+
+      expect(file).toEqual(blob);
+    });
+
+    it("should upload file and check it in list", async () => {
+      const file = await generateTestBlob();
+      const filename = uuid();
+      await fileManager.uploadFile(filename, file);
+
+      const fileMetadataList = await fileManager.getFileMetadataList();
+
+      const expectedMetadata: FileMetadata = {
+        filename,
+      };
+
+      const actualMetadata = fileMetadataList.find((metadata) => metadata.filename === filename);
+      expect(actualMetadata).not.toBeUndefined();
+      expect(expectedMetadata).toEqual(actualMetadata);
+    });
+  });
 });

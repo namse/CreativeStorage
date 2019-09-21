@@ -1,9 +1,9 @@
 import "./requires";
-import { testCaseMap } from "./it";
-export { testCaseNames } from "./it";
+import { itTestCaseList } from "./it";
+export { itTestCaseNames } from "./it";
 
 async function runTest(testCaseName: string): Promise<void> {
-  await testCaseMap[testCaseName]();
+  await itTestCaseList[testCaseName]();
 }
 
 if (typeof window !== "undefined") {

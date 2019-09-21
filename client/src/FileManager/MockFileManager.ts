@@ -1,33 +1,41 @@
-import IFileManager from "./IFileManager";
+import IFileManager, { FileMetadata } from "./IFileManager";
 
 export default class MockFileManager implements IFileManager {
-  private mockFileRepository: Map<string, Blob> = new Map();
+  private mockFileRepository: {[filename: string]: {
+    metadata: FileMetadata,
+    blob: Blob,
+  }} = {};
 
-  public async uploadFile(filename: string, file: Blob): Promise<void> {
-    this.mockFileRepository.set(filename, file);
-  }
-
-  public async startDownloadFile(filename: string) {
-    const file = this.mockFileRepository.get(filename);
-    if (!file) {
+  public async getDownloadUrl(filename: string): Promise<string> {
+    const fileInfo = this.mockFileRepository[filename];
+    if (!fileInfo) {
       throw new Error(`file ${filename} doesn't exists`);
     }
 
-    const dataUrl = await this.convertFileToDataUrl(file);
+    const {
+      blob,
+    } = fileInfo;
 
-    const link = document.createElement("a");
+    const dataUrl = await this.convertFileToDataUrl(blob);
 
-    link.download = filename;
-    link.href = dataUrl;
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
+    return dataUrl;
   }
 
-  private convertFileToDataUrl(file: Blob): Promise<string> {
+  public async uploadFile(filename: string, file: Blob): Promise<void> {
+    this.mockFileRepository[filename] = {
+      metadata: {
+        filename,
+      },
+      blob: file,
+    };
+  }
+
+  public async getFileMetadataList(): Promise<FileMetadata[]> {
+    return Object.values(this.mockFileRepository)
+      .map((info) => info.metadata);
+  }
+
+  private async convertFileToDataUrl(file: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
 
