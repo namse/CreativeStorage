@@ -1,10 +1,12 @@
 import IFileManager, { FileMetadata } from "./IFileManager";
 
 export default class MockFileManager implements IFileManager {
-  private mockFileRepository: {[filename: string]: {
-    metadata: FileMetadata,
-    blob: Blob,
-  }} = {};
+  private mockFileRepository: {
+    [filename: string]: {
+      metadata: FileMetadata;
+      blob: Blob;
+    };
+  } = {};
 
   public async getDownloadUrl(filename: string): Promise<string> {
     const fileInfo = this.mockFileRepository[filename];
@@ -12,9 +14,7 @@ export default class MockFileManager implements IFileManager {
       throw new Error(`file ${filename} doesn't exists`);
     }
 
-    const {
-      blob,
-    } = fileInfo;
+    const { blob } = fileInfo;
 
     const dataUrl = await this.convertFileToDataUrl(blob);
 
@@ -31,8 +31,7 @@ export default class MockFileManager implements IFileManager {
   }
 
   public async getFileMetadataList(): Promise<FileMetadata[]> {
-    return Object.values(this.mockFileRepository)
-      .map((info) => info.metadata);
+    return Object.values(this.mockFileRepository).map((info) => info.metadata);
   }
 
   private async convertFileToDataUrl(file: Blob): Promise<string> {
