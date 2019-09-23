@@ -1,6 +1,7 @@
-import IFileManager, { FileMetadata } from "./IFileManager";
+import IFileManager, { FileMetadata } from "src/FileManager/iFileManager";
+import BaseFileManager from "src/FileManager/BaseFileManager";
 
-export default class MockFileManager implements IFileManager {
+export default class MockFileManager extends BaseFileManager {
   private mockFileRepository: {
     [filename: string]: {
       metadata: FileMetadata;

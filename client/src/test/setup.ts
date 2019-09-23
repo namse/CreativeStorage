@@ -23,7 +23,7 @@ function readdir(directory: string): Promise<Dirent[]> {
 
 async function getFilesEndsWithRecursively(
   directory: string,
-  endsWith: string[],
+  endsOfPaths: string[],
 ): Promise<string[]> {
   const items = await readdir(directory);
   const testCodePaths: string[] = [];
@@ -33,11 +33,14 @@ async function getFilesEndsWithRecursively(
       if (!itemPath) {
         return;
       }
-      if (item.isFile() && endsWith.some(itemPath.endsWith)) {
+      if (item.isFile() && endsOfPaths.some((x) => itemPath.endsWith(x))) {
         testCodePaths.push(itemPath);
       }
       if (item.isDirectory()) {
-        const codePaths = await getFilesEndsWithRecursively(itemPath, endsWith);
+        const codePaths = await getFilesEndsWithRecursively(
+          itemPath,
+          endsOfPaths,
+        );
         testCodePaths.push(...codePaths);
       }
     }),

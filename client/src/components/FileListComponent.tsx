@@ -1,90 +1,64 @@
 import * as React from "react";
 // import downloadFille from "../share/downloadFile";
 // import "../stylesheet/ListComponent.css";
-import MockFileManager from "../FileManager/MockFileManager";
 import path from "path";
-import IFileManager from "src/FileManager/IFileManager";
+import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
+import MockFileManager from "src/FileManager/MockFileManager";
 
-type ListComponentPropsType = {
-  fileManager: IFileManager;
+type FileListComponentPropsType = {
+  fileManager: MockFileManager;
 };
 
-type ListComponentStateType = {
-  fileList: File[];
+type FileListComponentStateType = {
+  fileMetadataList: FileMetadata[];
 };
 
-export default class ListComponent extends React.Component<
-  ListComponentPropsType,
-  ListComponentStateType
+export default class FileListComponent extends React.Component<
+  FileListComponentPropsType,
+  FileListComponentStateType
 > {
   public static readonly listItemRole: string = "file-list-item";
-  private constructor(props: ListComponentPropsType) {
+  private constructor(props: FileListComponentPropsType) {
     super(props);
     this.state = {
-      fileList: []
+      fileMetadataList: [
+        { filename: "adfasdfasdf" },
+        { filename: "asdfasdfsadf" },
+      ],
     };
   }
-  public async componentDidMount(): Promise<void> {
-    this.props.fileManager.startDownloadFile(filename);
-
-    const filePathList: string[] = (() => {
-      const pathList: string[] = [];
-      for (let i = 0; i <= 3; i++) {
-        pathList[i] = path.resolve(
-          __dirname,
-          `../FileManger/mockfile/file${i}.mp4`
-        );
-      }
-      return pathList;
-    })();
-    for (const filePath of filePathList) {
-      const file = new File([`${filePath}`], `${filePath}`);
-      const filename: RegExpMatchArray | null = file.name.match(
-        /[-_\w]+[.][\w]+$/i
-      );
-      if (filename) {
-        const uploadFile = await this.mockFileManager.uploadFile(
-          filename[0],
-          file
-        );
-      }
-    }
+  public async componentDidMount() {
     this.setState({
-      fileList: await this.mockFileManager.getFileList()
+      fileMetadataList: await this.props.fileManager.getFileMetadataList(),
     });
-    return Promise.resolve();
   }
+
   public render() {
+    console.log("this is FileListComponent");
+    console.log("this.state: ", this.state);
     return (
       <div>
         <ul id="file-list">
-          {this.state.fileList && console.log("a")}
-          {this.state.fileList.map((file) => (
+          {this.state.fileMetadataList.map((fileMetadata) => (
             <li
-              role={ListComponent.listItemRole}
+              role={FileListComponent.listItemRole}
               className="file-item"
-              key={`file-list-li-${file.name}`}
+              key={`file-list-li-${fileMetadata.filename}`}
             >
-              <form>
-                <input type="checkbox" />
-                <span className="file-name">{file.name}</span>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="file-updated-at">TODO: get updated date</span>
-                <button
-                  type="button"
-                  className="button-download-item"
-                  onClick={() => this.mockFileManager.downloadFile}
-                >
-                  Download
-                </button>
-                <button
-                  type="button"
-                  className="button-delete-item"
-                  onClick={this.handleClickDeleteButton}
-                >
-                  Delete
-                </button>
-              </form>
+              <input type="checkbox"></input>
+              <span>{fileMetadata.filename}</span>
+              <button
+                type="submit"
+                onClick={() =>
+                  this.handleClickDownloadButton(fileMetadata.filename)
+                }
+                value="download"
+              />
+              <button
+                type="submit"
+                // onClick={}
+                value="delete(not implemented yet)"
+              />
             </li>
           ))}
         </ul>
@@ -92,20 +66,10 @@ export default class ListComponent extends React.Component<
     );
   }
 
-  // private handleClickDownloadButton = (e: React.MouseEvent) => {
-  //   const targetElement = e.target as HTMLElement;
-  //   const parent = targetElement.parentElement as HTMLElement;
-  //   const filename = parent.children[1].innerHTML;
-  //   const updatedAt = parent.children[2].innerHTML;
-  //   console.log(filename, updatedAt);
-  //   // TODO: implement downloadFille();
-  // };
-  private handleClickDeleteButton = (e: React.MouseEvent) => {
-    const targetElement = e.target as HTMLElement;
-    const parent = targetElement.parentElement as HTMLElement;
-    const filename = parent.children[1].innerHTML;
-    const updatedAt = parent.children[2].innerHTML;
-    console.log(filename, updatedAt);
-    // TODO: implement deleteFile();
-  };
+  private async handleClickDownloadButton(filename: string) {
+    const downloadUrl: string = await this.props.fileManager.getDownloadUrl(
+      filename,
+    );
+    this.props.fileManager.letBrowserStartDownload(filename, downloadUrl);
+  }
 }

@@ -22,7 +22,7 @@ export default class HeaderComponent extends React.Component {
 
   private handleUploadFileChange = () => {
     const inputElement: HTMLElement | null = document.querySelector(
-      "#upload-file"
+      "#upload-file",
     );
     if (inputElement !== null) {
       const files: FileList | null = (inputElement as HTMLInputElement).files;

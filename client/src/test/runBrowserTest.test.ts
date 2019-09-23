@@ -1,4 +1,7 @@
-import { startBundleSever, stopBundleServer } from "./browserTest/settings/bundleServer";
+import {
+  startBundleSever,
+  stopBundleServer,
+} from "./browserTest/settings/bundleServer";
 import { itTestCaseNames } from "./browserTest/settings/BrowserTest";
 
 describe("File Manager", () => {
