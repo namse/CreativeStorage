@@ -1,6 +1,6 @@
 import Koa from "koa";
 import Router from "koa-router";
-import * as fs from "fs";
+import fs from "fs";
 
 const router = new Router();
 
@@ -9,9 +9,9 @@ function readFile(filename: string): Promise<Buffer> {
     fs.readFile(`${__dirname}/uploads/${filename}`, (err, data) => {
       if (err) {
         reject(err);
-      } else {
-        resolve(data);
+        return;
       }
+      resolve(data);
     });
   });
 }
@@ -21,12 +21,37 @@ function renameFile(path: string, filename: string): Promise<Buffer> {
     fs.rename(path, `${__dirname}/uploads/${filename}`, (err) => {
       if (err) {
         reject(err);
-      } else {
-        resolve();
+        return;
       }
+      resolve();
     });
   });
 }
+
+type FileMetadata = {
+  filename: string,
+};
+
+function listFile(): Promise<FileMetadata[]> {
+  return new Promise((resolve, reject) => {
+    fs.readdir(`${__dirname}/uploads/`, (err, data) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const fileMetadataList: FileMetadata[] = data.map((value) => {
+        const fileMetadata: FileMetadata = { filename: value };
+        return fileMetadata;
+      });
+      resolve(fileMetadataList);
+    });
+  });
+}
+
+router.get("/fileMetadataList", async (ctx: Koa.Context, next) => {
+  ctx.body = await listFile();
+  ctx.status = 200;
+});
 
 router.post("/uploadFile", async (ctx: Koa.Context, next) => {
   if (!ctx.request.files || !ctx.request.files.file) {

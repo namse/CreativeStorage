@@ -6,6 +6,7 @@ async function uploadFile(filename: string, file: Buffer): Promise<void> {
     const form = new FormData();
     form.append("file", file, filename);
     const uploadImageUrl = "http://localhost:4002/uploadFile";
+
     const response = await fetch(uploadImageUrl, {
         method: "POST",
         body: form,
@@ -19,7 +20,6 @@ async function uploadFile(filename: string, file: Buffer): Promise<void> {
 async function downloadFile(filename: string): Promise<Buffer> {
     const uploadImageUrl = `http://localhost:4002/downloadFile?filename=${filename}`;
 
-    console.log("url: ", uploadImageUrl);
     const response = await fetch(uploadImageUrl);
 
     if (!response.ok) {
@@ -43,3 +43,5 @@ test("upload and download file", async () => {
     const downloadedFileInBase64 = downloadedFile.toString("base64");
     expect(downloadedFileInBase64).toEqual(imageInBase64);
 });
+
+export { uploadFile };
