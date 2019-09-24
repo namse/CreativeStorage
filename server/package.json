@@ -8,7 +8,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "watch-start": "concurrently --kill-others \"tsc --watch\" \"nodemon dist/index.js\"",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "tslintOnly": "tslint -c tslint.json"
   },
   "author": "",
   "license": "ISC",
