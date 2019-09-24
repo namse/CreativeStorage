@@ -6,7 +6,7 @@ const router = new Router();
 const storageService = new StorageService();
 
 router.get("/fileMetadataList", async (ctx: Koa.Context, next) => {
-  ctx.body = await storageService.listFile();
+  ctx.body = await storageService.listFiles();
   ctx.status = 200;
 });
 
@@ -17,7 +17,7 @@ router.post("/uploadFile", async (ctx: Koa.Context, next) => {
     return;
   }
   const { path, name } = ctx.request.files.file;
-  await storageService.renameFile(path, name);
+  await storageService.writeFile(path, name);
   ctx.status = 200;
 });
 
