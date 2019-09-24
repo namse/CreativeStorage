@@ -1,25 +1,14 @@
-import {
-  startBundleSever,
-  stopBundleServer,
-} from "./browserTest/settings/bundleServer";
-import { itTestCaseNames } from "./browserTest/settings/BrowserTest";
+import { itTestCaseNames } from "./browserTest/settings/testEnv";
+import { port } from "./env";
 
-describe("File Manager", () => {
+describe("Test in browser", () => {
   beforeAll(async () => {
     jest.setTimeout(20000);
-    const port = 12345;
-    await startBundleSever(port);
-
-    page.on("console", (msg) => console.log(msg.location(), msg.text()));
 
     await page.goto(`http://localhost:${port}`);
 
     await page.waitForSelector("#root");
     jest.setTimeout(5000);
-  });
-
-  afterAll(async () => {
-    stopBundleServer();
   });
 
   itTestCaseNames.forEach((testCaseName) => {

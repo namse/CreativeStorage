@@ -2,18 +2,14 @@ import { it, describe, test } from "./settings/it";
 import expect from "expect";
 import MockFileManager from "src/FileManager/MockFileManager";
 import BaseFileManager from "src/FileManager/BaseFileManager";
+
+import * as React from "react";
+import { render } from "@testing-library/react";
 import FileListComponent from "src/components/FileListComponent";
 import {
   generateTestBlob,
   b64EncodeUnicode,
 } from "src/test/browserTest/FileManager.browsertest";
-const render: any =
-  typeof document !== "undefined"
-    ? // tslint:disable-next-line:no-var-requires
-      require("@testing-library/react").render
-    : undefined;
-// import { render } from "@testing-library/react";
-import * as React from "react";
 
 describe("<FileListComponent /> with MockFileManager", () => {
   test("check li tags were made perfectly", async () => {

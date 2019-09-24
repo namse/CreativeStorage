@@ -1,6 +1,13 @@
 import fs, { Dirent } from "fs";
 import path from "path";
+import {
+  startBundleSever,
+  stopBundleServer,
+} from "./browserTest/settings/bundleServer";
+import { port, settingsPath, testEnvPath } from "./env";
+// tslint:disable-next-line:no-var-requires
 const { setup: setupPuppeteer } = require("jest-environment-puppeteer");
+import puppeteer from "puppeteer";
 
 function readdir(directory: string): Promise<Dirent[]> {
   return new Promise((resolve, reject) => {
@@ -49,16 +56,13 @@ async function getFilesEndsWithRecursively(
   return testCodePaths;
 }
 
-module.exports = async (globalConfig: any) => {
-  await setupPuppeteer(globalConfig);
-
+async function setRequires() {
   const browserTestDirectoryPath = path.join(__dirname, "browserTest");
 
   const browserTestCodePaths = await getFilesEndsWithRecursively(
     browserTestDirectoryPath,
     [".browsertest.ts", ".browsertest.tsx"],
   );
-  const settingsPath = path.join(__dirname, "./browserTest/settings");
   const requiresFilePath = path.join(settingsPath, "requires.ts");
 
   const requiresFileContent = browserTestCodePaths
@@ -67,7 +71,7 @@ module.exports = async (globalConfig: any) => {
     )
     .map(
       (browserTestCodePath) =>
-        `require("${browserTestCodePath.replace(/\\/g, "/")}");`,
+        `console.log(require("${browserTestCodePath.replace(/\\/g, "/")}"));`,
     )
     .join("\n");
 
@@ -81,4 +85,38 @@ module.exports = async (globalConfig: any) => {
       resolve();
     });
   });
+}
+
+async function setTestEnv() {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.goto(`http://localhost:${port}`);
+  await page.waitForSelector("#root");
+
+  const itTestCaseNames = await page.evaluate(() => {
+    return (window as any).itTestCaseNames;
+  }) as string[];
+
+  const testEnvContent = `export const itTestCaseNames = ${JSON.stringify(itTestCaseNames, null, 2)};`;
+  await new Promise((resolve, reject) => {
+    fs.writeFile(testEnvPath, testEnvContent, { encoding: "utf-8" }, (err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+  });
+
+  await browser.close();
+}
+
+module.exports = async (globalConfig: any) => {
+  await setupPuppeteer(globalConfig);
+
+  await setRequires();
+
+  await startBundleSever(port);
+
+  await setTestEnv();
 };

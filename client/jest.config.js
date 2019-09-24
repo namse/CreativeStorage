@@ -10,5 +10,5 @@ module.exports = {
     "\\.js$": "ts-jest",
   },
   globalSetup: "./src/test/setup.ts",
-  // globalTeardown: "./src/test/teardown.ts",
+  globalTeardown: "./src/test/teardown.ts",
 };

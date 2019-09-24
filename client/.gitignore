@@ -1,6 +1,6 @@
 dist
-requires.ts
-
+src/test/browserTest/settings/requires.ts
+src/test/browserTest/settings/testEnv.ts
 # Created by https://www.gitignore.io/api/node,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=node,visualstudiocode
 
