@@ -1,6 +1,6 @@
 import * as React from "react";
 // import downloadFille from "../share/downloadFile";
-// import "../stylesheet/ListComponent.css";
+// import "src/stylesheets/FileListComponent.css";
 import path from "path";
 import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
 import MockFileManager from "src/FileManager/MockFileManager";
@@ -21,17 +21,14 @@ export default class FileListComponent extends React.Component<
   private constructor(props: FileListComponentPropsType) {
     super(props);
     this.state = {
-      fileMetadataList: [
-        { filename: "adfasdfasdf" },
-        { filename: "asdfasdfsadf" },
-      ],
+      fileMetadataList: [],
     };
   }
-  public async componentDidMount() {
-    this.setState({
-      fileMetadataList: await this.props.fileManager.getFileMetadataList(),
-    });
-  }
+  // public async componentDidMount() {
+  //   this.setState({
+  //     fileMetadataList: await this.props.fileManager.getFileMetadataList(),
+  //   });
+  // }
 
   public render() {
     console.log("this is FileListComponent");
@@ -39,6 +36,7 @@ export default class FileListComponent extends React.Component<
     return (
       <div>
         <ul id="file-list">
+          {console.log(this.state.fileMetadataList)}
           {this.state.fileMetadataList.map((fileMetadata) => (
             <li
               role={FileListComponent.listItemRole}
@@ -52,13 +50,15 @@ export default class FileListComponent extends React.Component<
                 onClick={() =>
                   this.handleClickDownloadButton(fileMetadata.filename)
                 }
-                value="download"
-              />
+              >
+                download
+              </button>
               <button
                 type="submit"
                 // onClick={}
-                value="delete(not implemented yet)"
-              />
+              >
+                delete(not implemented yet)
+              </button>
             </li>
           ))}
         </ul>
@@ -67,9 +67,9 @@ export default class FileListComponent extends React.Component<
   }
 
   private async handleClickDownloadButton(filename: string) {
-    const downloadUrl: string = await this.props.fileManager.getDownloadUrl(
-      filename,
-    );
-    this.props.fileManager.letBrowserStartDownload(filename, downloadUrl);
+    // const downloadUrl: string = await this.props.fileManager.getDownloadUrl(
+    //   filename,
+    // );
+    // this.props.fileManager.letBrowserStartDownload(filename, downloadUrl);
   }
 }
