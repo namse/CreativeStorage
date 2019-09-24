@@ -25,7 +25,7 @@ public state = {
 
   async public uploadFiles(): Promise<T> {
     this.setState({ uploadProgress: {}});
-    const promises: Promise<any> = [];
+    const promises: Promise[] = [];
     this.state.files.forEach((file: File) => {
       promises.push(this.sendRequest(file));
     });
