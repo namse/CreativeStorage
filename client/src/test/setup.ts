@@ -1,9 +1,6 @@
 import fs, { Dirent } from "fs";
 import path from "path";
-import {
-  startBundleSever,
-  stopBundleServer,
-} from "./browserTest/settings/bundleServer";
+import { startBundleSever } from "./browserTest/settings/bundleServer";
 import { port, settingsPath, testEnvPath } from "./env";
 // tslint:disable-next-line:no-var-requires
 const { setup: setupPuppeteer } = require("jest-environment-puppeteer");
@@ -93,11 +90,15 @@ async function setTestEnv() {
   await page.goto(`http://localhost:${port}`);
   await page.waitForSelector("#root");
 
-  const itTestCaseNames = await page.evaluate(() => {
+  const itTestCaseNames = (await page.evaluate(() => {
     return (window as any).itTestCaseNames;
-  }) as string[];
+  })) as string[];
 
-  const testEnvContent = `export const itTestCaseNames = ${JSON.stringify(itTestCaseNames, null, 2)};`;
+  const testEnvContent = `export const itTestCaseNames = ${JSON.stringify(
+    itTestCaseNames,
+    null,
+    2,
+  )};`;
   await new Promise((resolve, reject) => {
     fs.writeFile(testEnvPath, testEnvContent, { encoding: "utf-8" }, (err) => {
       if (err) {

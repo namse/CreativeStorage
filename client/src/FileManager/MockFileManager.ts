@@ -1,4 +1,4 @@
-import IFileManager, { FileMetadata } from "src/FileManager/iFileManager";
+import { FileMetadata } from "src/FileManager/iFileManager";
 import BaseFileManager from "src/FileManager/BaseFileManager";
 
 export default class MockFileManager extends BaseFileManager {

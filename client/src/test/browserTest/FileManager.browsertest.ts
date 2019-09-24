@@ -1,4 +1,4 @@
-import { it, describe, test } from "./settings/it";
+import { it, describe } from "src/test/browserTest/settings/it";
 import expect from "expect";
 import uuid from "uuid/v4";
 import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";

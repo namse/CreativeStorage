@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import FileListComponent from "src/components/FileListComponent";
+import DownloadFileComponent from "src/components/DownloadFileComponent";
 import HeaderComponent from "src/components/HeaderComponent";
 import MockFileManager from "src/FileManager/MockFileManager";
 
@@ -8,10 +8,10 @@ export default class App extends Component {
     return (
       <div>
         <HeaderComponent />
-        <FileListComponent fileManager={new MockFileManager()}>
+        <DownloadFileComponent fileManager={new MockFileManager()}>
           {" "}
           /
-        </FileListComponent>
+        </DownloadFileComponent>
       </div>
     );
   }

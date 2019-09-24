@@ -1,25 +1,24 @@
 import * as React from "react";
 // import downloadFille from "../share/downloadFile";
-// import "src/stylesheets/FileListComponent.css";
-import path from "path";
-import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
+import "src/stylesheets/DownloadFileComponent.css";
+import { FileMetadata } from "src/FileManager/IFileManager";
 import MockFileManager from "src/FileManager/MockFileManager";
 
-type FileListComponentPropsType = {
+type DownloadFileComponentPropsType = {
   fileManager: MockFileManager;
 };
 
-type FileListComponentStateType = {
+type DownloadFileComponentStateType = {
   fileMetadataList: FileMetadata[];
 };
 
-export default class FileListComponent extends React.Component<
-  FileListComponentPropsType,
-  FileListComponentStateType
+export default class DownloadFileComponent extends React.Component<
+  DownloadFileComponentPropsType,
+  DownloadFileComponentStateType
 > {
   public static readonly listItemRole: string = "file-list-item";
 
-  private constructor(props: FileListComponentPropsType) {
+  private constructor(props: DownloadFileComponentPropsType) {
     super(props);
     this.state = {
       fileMetadataList: [],
@@ -38,7 +37,7 @@ export default class FileListComponent extends React.Component<
         <ul id="file-list">
           {this.state.fileMetadataList.map((fileMetadata) => (
             <li
-              role={FileListComponent.listItemRole}
+              role={DownloadFileComponent.listItemRole}
               className="file-list-item"
               key={`file-list-li-${fileMetadata.filename}`}
             >

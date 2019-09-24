@@ -1,5 +1,5 @@
-import { itTestCaseNames } from "./browserTest/settings/testEnv";
-import { port } from "./env";
+import { itTestCaseNames } from "src/test/browserTest/settings/testEnv";
+import { port } from "src/test/env";
 
 describe("Test in browser", () => {
   beforeAll(async () => {
