@@ -35,6 +35,10 @@ export default class MockFileManager extends BaseFileManager {
     return Object.values(this.mockFileRepository).map((info) => info.metadata);
   }
 
+  public letBrowserStartDownload(filename: string, url: string): void {
+    super.letBrowserStartDownload(filename, url);
+  }
+
   private async convertFileToDataUrl(file: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
