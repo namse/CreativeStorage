@@ -1,10 +1,7 @@
 import fetch from "node-fetch";
 import uuid from "uuid/v4";
 import { uploadFile } from "./uploadAndDownloadFile.test";
-
-type FileMetadata = {
-  filename: string,
-};
+import { FileMetadata } from "../storageService";
 
 async function getFileMetadataList(): Promise<FileMetadata[]> {
   const url = "http://localhost:4002/fileMetadataList";
@@ -24,9 +21,11 @@ it("getlist file", async () => {
   await uploadFile(filename, imageBuffer);
 
   const fileMetadataList = await getFileMetadataList();
-  const filenameFromApi = fileMetadataList.map((el: FileMetadata) => {
+  const filenameFromApi = fileMetadataList.map((el) => {
     return el.filename;
   });
 
   expect(filenameFromApi).toEqual(expect.arrayContaining([filename]));
 });
+
+export { getFileMetadataList };
