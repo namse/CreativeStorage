@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import uuid from "uuid/v4";
 import { uploadFile } from "./uploadAndDownloadFile.test";
-import { FileMetadata } from "../storageClass";
+import { FileMetadata } from "../storageService";
 
 async function getFileMetadataList(): Promise<FileMetadata[]> {
   const url = "http://localhost:4002/fileMetadataList";

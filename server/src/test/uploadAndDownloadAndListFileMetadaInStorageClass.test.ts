@@ -1,14 +1,10 @@
 import uuid from "uuid/v4";
-import StorageClass from "../storageClass";
 import { uploadFile, downloadFile } from "./uploadAndDownloadFile.test";
 import { getFileMetadataList } from "./uploadAndGetFileMetadataList.test";
-import { FileMetadata } from "../storageClass";
 
 describe(`upload and download and listFileMetadata test from StrageClass`, () => {
 
   it(`should upload file and get FileMetadatalist from server and check it in downloads files`, async () => {
-    const storageClass = new StorageClass();
-
     const imageInBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
     const imageBuffer = Buffer.from(imageInBase64, "base64");
     const filename = uuid();

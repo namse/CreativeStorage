@@ -1,12 +1,12 @@
 import Koa from "koa";
 import Router from "koa-router";
-import StorageClass from "./storageClass";
+import StorageService from "./storageService";
 
 const router = new Router();
-const storageClass = new StorageClass();
+const storageService = new StorageService();
 
 router.get("/fileMetadataList", async (ctx: Koa.Context, next) => {
-  ctx.body = await storageClass.listFile();
+  ctx.body = await storageService.listFile();
   ctx.status = 200;
 });
 
@@ -17,12 +17,12 @@ router.post("/uploadFile", async (ctx: Koa.Context, next) => {
     return;
   }
   const { path, name } = ctx.request.files.file;
-  await storageClass.renameFile(path, name);
+  await storageService.renameFile(path, name);
   ctx.status = 200;
 });
 
 router.get("/downloadFile", async (ctx: Koa.Context, next) => {
-  ctx.body = await storageClass.readFile(ctx.request.query.filename);
+  ctx.body = await storageService.readFile(ctx.request.query.filename);
   ctx.status = 200;
 });
 

@@ -4,7 +4,7 @@ export type FileMetadata = {
   filename: string,
 };
 
-class StorageClass {
+class StorageService {
 
   public readFile(filename: string): Promise<Buffer> {
     return new Promise((resolve, reject) => {
@@ -18,7 +18,7 @@ class StorageClass {
     });
   }
 
-  public renameFile(path: string, filename: string): Promise<Buffer> {
+  public writeFile(path: string, filename: string): Promise<Buffer> {
     return new Promise((resolve, reject) => {
       fs.rename(path, `${__dirname}/uploads/${filename}`, (err) => {
         if (err) {
@@ -30,7 +30,7 @@ class StorageClass {
     });
   }
 
-  public listFile(): Promise<FileMetadata[]> {
+  public listFiles(): Promise<FileMetadata[]> {
     return new Promise((resolve, reject) => {
       fs.readdir(`${__dirname}/uploads/`, (err, data) => {
         if (err) {
@@ -48,4 +48,4 @@ class StorageClass {
 
 }
 
-export default StorageClass;
+export default StorageService;
