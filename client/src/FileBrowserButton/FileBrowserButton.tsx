@@ -1,6 +1,5 @@
 import * as React from "react";
 interface Props {
-  disabled: boolean;
   onFilesAdded(array: Array<File | null>): void;
 }
 
@@ -11,11 +10,9 @@ class FileBrowserButton extends React.Component<Props> {
   }
 
   public onFilesAdded(event: React.ChangeEvent<HTMLInputElement>) {
-    if (!this.props.disabled) {
-      const files = event.target.files;
-      const array: Array<File | null> = this.fileListToArray(files);
-      this.props.onFilesAdded(array);
-    }
+    const files = event.target.files;
+    const array: Array<File | null> = this.fileListToArray(files);
+    this.props.onFilesAdded(array);
   }
 
   public render() {
