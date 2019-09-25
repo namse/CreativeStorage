@@ -26,8 +26,7 @@ export default class Upload extends React.Component<
   }
 
   public async sendFiles(): Promise<void> {
-    // Promise.all의 타입을 어떻게 처리해야 할까요?
-    const promises: Array<Promise<void>> = []; // V
+    const promises: Array<Promise<void>> = [];
     this.state.files.forEach((file: File) => {
       promises.push(this.sendRequest(file));
     });
