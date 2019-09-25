@@ -6,8 +6,9 @@ module.exports = {
   },
   transform: {
     "^.+\\.ts?$": "ts-jest",
+    "^.+\\.tsx?$": "ts-jest",
     "\\.js$": "ts-jest",
   },
   globalSetup: "./src/test/setup.ts",
-  // globalTeardown: "./src/test/teardown.ts",
+  globalTeardown: "./src/test/teardown.ts",
 };

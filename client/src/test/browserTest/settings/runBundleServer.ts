@@ -1,4 +1,4 @@
-import * as bundleServer from "./bundleServer";
+import * as bundleServer from "src/test/browserTest/settings/bundleServer";
 
 const portTagIndex = process.argv.findIndex((arg) => arg === "--port");
 if (portTagIndex < 0 || process.argv.length <= portTagIndex + 1) {
@@ -12,5 +12,4 @@ async function runBundleServer() {
   await bundleServer.startBundleSever(port);
 }
 
-runBundleServer()
-  .catch((err) => console.error(err));
+runBundleServer().catch((err) => console.error(err));

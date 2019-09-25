@@ -8,6 +8,11 @@ export function it(text: string, testMethod: () => any) {
   itTestCaseNames.push(text);
 }
 
+export function test(text: string, testMethod: () => any) {
+  itTestCaseList[text] = testMethod;
+  itTestCaseNames.push(text);
+}
+
 export function describe(text: string, testMethod: () => any) {
   describeNames.push(text);
   testMethod();
