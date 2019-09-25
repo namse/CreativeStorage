@@ -1,11 +1,9 @@
 import * as React from "react";
-// import downloadFille from "../share/downloadFile";
 import "src/stylesheets/DownloadFileComponent.css";
-import { FileMetadata } from "src/FileManager/IFileManager";
-import MockFileManager from "src/FileManager/MockFileManager";
+import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
 
 type DownloadFileComponentPropsType = {
-  fileManager: MockFileManager;
+  fileManager: IFileManager;
 };
 
 type DownloadFileComponentStateType = {
@@ -68,6 +66,6 @@ export default class DownloadFileComponent extends React.Component<
     const downloadUrl: string = await this.props.fileManager.getDownloadUrl(
       filename,
     );
-    this.props.fileManager.letBrowserStartDownload(filename, downloadUrl);
+    return downloadUrl;
   }
 }

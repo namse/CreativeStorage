@@ -1,7 +1,6 @@
-import { FileMetadata } from "src/FileManager/iFileManager";
-import BaseFileManager from "src/FileManager/BaseFileManager";
+import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
 
-export default class MockFileManager extends BaseFileManager {
+export default class MockFileManager implements IFileManager {
   private mockFileRepository: {
     [filename: string]: {
       metadata: FileMetadata;
@@ -33,10 +32,6 @@ export default class MockFileManager extends BaseFileManager {
 
   public async getFileMetadataList(): Promise<FileMetadata[]> {
     return Object.values(this.mockFileRepository).map((info) => info.metadata);
-  }
-
-  public letBrowserStartDownload(filename: string, url: string): void {
-    super.letBrowserStartDownload(filename, url);
   }
 
   private async convertFileToDataUrl(file: Blob): Promise<string> {
