@@ -6,8 +6,8 @@ const router = new KoaRouter();
 const storageService = new StorageService();
 const fileApiRouter = new FileApiRouter(storageService);
 
-router.get("/fileMetadataList", fileApiRouter.listFiles);
-router.post("/uploadFile", fileApiRouter.writeFile);
-router.get("/downloadFile", fileApiRouter.readFile);
+router.get("/fileMetadataList", fileApiRouter.listFiles());
+router.post("/uploadFile", fileApiRouter.writeFile());
+router.get("/downloadFile", fileApiRouter.readFile());
 
 export default router;
