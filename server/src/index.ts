@@ -3,6 +3,7 @@ import router from "./router";
 import koaBody from "koa-body";
 
 const app = new Koa();
+
 const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
 app.use(koaBody({
   multipart: true,
@@ -19,8 +20,10 @@ app.on("error", (err, ctx) => {
   ctx.status = 500;
 });
 
-app.listen(PORT, () => {
-  console.log(`server is listening to port ${PORT}`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`server is listening to port ${PORT}`);
+  });
+}
 
-export default app;
+export { app };

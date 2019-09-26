@@ -1,21 +1,18 @@
-import { Server } from "http";
-import app from "../index";
 import uuid from "uuid/v4";
 import { uploadFile, downloadFile } from "./uploadAndDownloadFile.test";
 import { getFileMetadataList } from "./uploadAndGetFileMetadataList.test";
+import http from "http";
+import { app } from "../index";
 
 describe(`FileApiRouter test`, () => {
 
-  let server: Server;
-
-  beforeAll((done) => {
-    console.log("서버 열어요~");
-    server = app.listen(done);
+  let server: http.Server;
+  beforeAll(async () => {
+    server = app.listen(4002);
   });
 
-  afterAll((done) => {
-    server.close(done);
-    console.log("서버 닫아요~");
+  afterAll(async () => {
+    server.close();
   });
 
   it(`should upload file and get FileMetadatalist from server and check it in downloads files`, async () => {
@@ -23,11 +20,9 @@ describe(`FileApiRouter test`, () => {
     const imageBuffer = Buffer.from(imageInBase64, "base64");
     const filename = uuid();
 
-    console.log("업로드 테스트 바로 전", filename);
     await uploadFile(filename, imageBuffer);
 
     const fileMetadataList = await getFileMetadataList();
-    console.log("리스트 메타데이터", fileMetadataList);
     const filenameFromApi = fileMetadataList.map((fileMetadata) => {
       return fileMetadata.filename;
     });

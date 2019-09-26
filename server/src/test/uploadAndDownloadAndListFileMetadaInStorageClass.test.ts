@@ -1,8 +1,18 @@
 import uuid from "uuid/v4";
 import { uploadFile, downloadFile } from "./uploadAndDownloadFile.test";
 import { getFileMetadataList } from "./uploadAndGetFileMetadataList.test";
+import http from "http";
+import { app } from "../index";
 
-describe(`upload and download and listFileMetadata test from StrageClass`, () => {
+describe("upload and download and listFileMetadata test from StrageClass", () => {
+  let server: http.Server;
+  beforeAll(async () => {
+    server = app.listen(4002);
+  });
+
+  afterAll(async () => {
+    server.close();
+  });
 
   it(`should upload file and get FileMetadatalist from server and check it in downloads files`, async () => {
     const imageInBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
@@ -24,4 +34,5 @@ describe(`upload and download and listFileMetadata test from StrageClass`, () =>
 
     expect(downloadFiles).toEqual(expect.arrayContaining([imageInBase64]));
   });
+
 });
