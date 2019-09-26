@@ -43,6 +43,10 @@ export default class Upload extends React.Component<
     });
   }
 
+  public async clearList(): void {
+    this.setState({ files: [] });
+  }
+
   public render() {
     return (
       <div className="Upload">
@@ -51,7 +55,17 @@ export default class Upload extends React.Component<
           <div>
             <FileBrowserButton onFilesAdded={this.onFilesAdded} />
           </div>
+          <div className="FileList">
+            {this.state.files.map((file) => {
+              return (
+                <div key={file.name} className="Row">
+                  <span className="Filename">{file.name}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
+        <button onClick={this.clearList}>clear</button>
         <button onClick={this.sendFiles}>send</button>
       </div>
     );
