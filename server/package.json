@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "set NODE_ENV=test&& jest --runInBand",
     "build": "tsc",
     "watch": "tsc -w",
     "watch-start": "concurrently --kill-others \"tsc --watch\" \"nodemon dist/index.js\"",

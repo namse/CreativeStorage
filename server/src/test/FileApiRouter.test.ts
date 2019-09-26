@@ -4,14 +4,13 @@ import { getFileMetadataList } from "./uploadAndGetFileMetadataList.test";
 import http from "http";
 import { app } from "../index";
 
-describe(`FileApiRouter test`, () => {
-
+describe("FileApiRouter test", () => {
   let server: http.Server;
-  beforeAll(async () => {
+  beforeEach(() => {
     server = app.listen(4002);
   });
 
-  afterAll(async () => {
+  afterEach(() => {
     server.close();
   });
 

@@ -1,5 +1,5 @@
 import Koa from "koa";
-import router from "./router";
+import { fileApiRouter } from "./router";
 import koaBody from "koa-body";
 
 const app = new Koa();
@@ -9,8 +9,8 @@ app.use(koaBody({
   multipart: true,
 }));
 
-app.use(router.routes());
-app.use(router.allowedMethods());
+app.use(fileApiRouter.router.routes());
+app.use(fileApiRouter.router.allowedMethods());
 app.use(async (ctx, next) => {
   ctx.status = 404;
 });
@@ -25,5 +25,4 @@ if (process.env.NODE_ENV !== "test") {
     console.log(`server is listening to port ${PORT}`);
   });
 }
-
 export { app };

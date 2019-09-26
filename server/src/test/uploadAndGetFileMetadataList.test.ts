@@ -19,11 +19,11 @@ async function getFileMetadataList(): Promise<FileMetadata[]> {
 
 describe("get FileMetadataList test", () => {
   let server: http.Server;
-  beforeAll(async () => {
+  beforeEach(() => {
     server = app.listen(4002);
   });
 
-  afterAll(async () => {
+  afterEach(() => {
     server.close();
   });
 

@@ -14,7 +14,7 @@ async function uploadFile(filename: string, file: Buffer): Promise<void> {
     body: form,
   });
   if (!response.ok) {
-      throw new Error(response.statusText);
+    throw new Error(response.statusText);
   }
 }
 
@@ -30,18 +30,18 @@ async function downloadFile(filename: string): Promise<Buffer> {
   return buffer;
 }
 
-describe("demo test", () => {
+describe("upload and download file test", () => {
   let server: http.Server;
-  beforeAll(async () => {
+  beforeEach(() => {
     server = app.listen(4002);
   });
 
-  afterAll(async () => {
+  afterEach(() => {
     server.close();
   });
 
-  test("upload and download file", async () => {
-      // tslint:disable-next-line: max-line-length
+  it("upload and download file", async () => {
+    // tslint:disable-next-line: max-line-length
     const imageInBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
     const imageBuffer = Buffer.from(imageInBase64, "base64");
 
