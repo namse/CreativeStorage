@@ -23,7 +23,7 @@ async function downloadFile(filename: string): Promise<Buffer> {
 
   const response = await fetch(uploadImageUrl);
   if (!response.ok) {
-    throw new Error(response.type);
+    throw new Error(response.statusText);
   }
 
   const buffer = await response.buffer();
