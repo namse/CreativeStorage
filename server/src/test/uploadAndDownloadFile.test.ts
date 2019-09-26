@@ -1,6 +1,8 @@
 import fetch from "node-fetch";
 import FormData from "form-data";
 import uuid from "uuid/v4";
+import http from "http";
+import { app } from "../index";
 
 async function uploadFile(filename: string, file: Buffer): Promise<void> {
   const form = new FormData();
@@ -11,9 +13,8 @@ async function uploadFile(filename: string, file: Buffer): Promise<void> {
     method: "POST",
     body: form,
   });
-
   if (!response.ok) {
-    throw new Error(response.statusText);
+      throw new Error(response.statusText);
   }
 }
 
@@ -21,27 +22,37 @@ async function downloadFile(filename: string): Promise<Buffer> {
   const uploadImageUrl = `http://localhost:4002/downloadFile?filename=${filename}`;
 
   const response = await fetch(uploadImageUrl);
-
   if (!response.ok) {
-    throw new Error(response.statusText);
+    throw new Error(response.type);
   }
 
   const buffer = await response.buffer();
   return buffer;
 }
 
-test("upload and download file", async () => {
-  // tslint:disable-next-line: max-line-length
-  const imageInBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-  const imageBuffer = Buffer.from(imageInBase64, "base64");
+describe("demo test", () => {
+  let server: http.Server;
+  beforeAll(async () => {
+    server = app.listen(4002);
+  });
 
-  const filename = uuid();
+  afterAll(async () => {
+    server.close();
+  });
 
-  await uploadFile(filename, imageBuffer);
+  test("upload and download file", async () => {
+      // tslint:disable-next-line: max-line-length
+    const imageInBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+    const imageBuffer = Buffer.from(imageInBase64, "base64");
 
-  const downloadedFile = await downloadFile(filename);
-  const downloadedFileInBase64 = downloadedFile.toString("base64");
-  expect(downloadedFileInBase64).toEqual(imageInBase64);
+    const filename = uuid();
+
+    await uploadFile(filename, imageBuffer);
+
+    const downloadedFile = await downloadFile(filename);
+    const downloadedFileInBase64 = downloadedFile.toString("base64");
+    expect(downloadedFileInBase64).toEqual(imageInBase64);
+  });
 });
 
 export { uploadFile, downloadFile };
