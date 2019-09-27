@@ -1,7 +1,5 @@
 import * as React from "react";
-import FileBrowserButtonComponent from "src/components/FileBrowserButtonComponent";
 import IFileManager from "src/FileManager/IFileManager";
-import MockFileManager from "src/FileManager/MockFileManager";
 type State = {
   files: File[];
 };
