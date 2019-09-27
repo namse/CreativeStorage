@@ -9,7 +9,7 @@ export default class App extends React.Component {
     return (
       <Router>
         <div>
-          <Route path="/" exact={true} component={HomePage} />
+          <Route path="/" component={HomePage} />
           <Route path="/upload" component={UploadFilePage} />
           <Route path="/download" component={DownloadFilePage} />
         </div>

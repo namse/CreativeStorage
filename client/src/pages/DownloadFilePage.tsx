@@ -6,6 +6,7 @@ export default class FileListAndDownloadPage extends React.Component {
   public render() {
     return (
       <div>
+        Download Files
         <DownloadFileComponent
           fileManager={new MockFileManager()}
         ></DownloadFileComponent>
