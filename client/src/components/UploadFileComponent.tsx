@@ -29,6 +29,7 @@ export default class UploadFileComponent extends React.Component<
         <div className="content">
           <div>
             <input
+              role="file-input"
               className="file-input"
               type="file"
               multiple
@@ -38,7 +39,11 @@ export default class UploadFileComponent extends React.Component<
           <ul className="file-list">
             {this.state.files.map((file) => {
               return (
-                <li key={`file-${file.name}`} className="row">
+                <li
+                  key={`file-${file.name}`}
+                  className="file-name"
+                  role="file-name"
+                >
                   <span className="filename">{file.name}</span>
                 </li>
               );
@@ -46,7 +51,9 @@ export default class UploadFileComponent extends React.Component<
           </ul>
         </div>
         <button onClick={this.onClickClearList}>clear</button>
-        <button onClick={this.sendFiles}>send</button>
+        <button onClick={this.sendFiles} className="send-file" role="send-file">
+          send
+        </button>
       </div>
     );
   }
