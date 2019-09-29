@@ -12,7 +12,7 @@ export default class UploadFileComponent extends React.Component<
   UploadFilePagePropsType,
   State
 > {
-  private constructor(props: UploadFilePagePropsType) {
+  public constructor(props: UploadFilePagePropsType) {
     super(props);
     this.state = {
       files: [],
@@ -70,21 +70,15 @@ export default class UploadFileComponent extends React.Component<
 
   private async sendFiles(): Promise<void> {
     const promises: Array<Promise<void>> = [];
-    this.state.files.forEach((file: File) => {
+    for (const file of this.state.files) {
       promises.push(this.sendRequest(file));
-    });
-    try {
-      await Promise.all(promises);
-      this.onClickClearList();
-    } catch (e) {
-      console.log(e);
     }
+    await Promise.all(promises);
+    this.onClickClearList();
   }
 
   private async sendRequest(file: File): Promise<void> {
-    return new Promise((resolve, reject) => {
-      resolve(this.props.fileManager.uploadFile(file.name, file));
-    });
+    await this.props.fileManager.uploadFile(file.name, file);
   }
 
   private onClickClearList(): void {
