@@ -75,7 +75,7 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private async sendRequest(file: File): Promise<void> {
-    await this.props.fileManager.uploadFile(file.name, file);
+    await this.props.fileManager.uploadFile(file);
   }
 
   private onClickClearList(): void {
