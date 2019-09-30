@@ -21,13 +21,15 @@ export default class MockFileManager implements IFileManager {
     return dataUrl;
   }
 
-  public async uploadFile(filename: string, file: Blob): Promise<void> {
-    this.mockFileRepository[filename] = {
-      metadata: {
-        filename,
-      },
-      blob: file,
-    };
+  public async uploadFiles(files: File[]): Promise<void> {
+    for (const file of files) {
+      this.mockFileRepository[file.name] = {
+        metadata: {
+          filename: file.name,
+        },
+        blob: file,
+      };
+    }
   }
 
   public async getFileMetadataList(): Promise<FileMetadata[]> {
