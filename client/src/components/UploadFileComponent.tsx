@@ -69,10 +69,9 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private async sendFiles(): Promise<void> {
-    const promises: Array<Promise<void>> = [];
-    for (const file of this.state.files) {
-      promises.push(this.sendRequest(file));
-    }
+    const promises: Array<Promise<void>> = this.state.files.map((file) =>
+      this.sendRequest(file),
+    );
     await Promise.all(promises);
     this.onClickClearList();
   }
@@ -83,9 +82,10 @@ export default class UploadFileComponent extends React.Component<
 
   private onClickClearList(): void {
     this.setState({ files: [] });
-    (document.getElementsByClassName(
+    const ElInputTag = document.getElementsByClassName(
       "file-input",
-    )[0] as HTMLInputElement).value = "";
+    )[0] as HTMLInputElement;
+    ElInputTag.value = "";
   }
 
   private fileListToArray(files: FileList): File[] {
