@@ -4,6 +4,6 @@ export type FileMetadata = {
 
 export default interface IFileManager {
   getDownloadUrl(filename: string): Promise<string>;
-  uploadFile(filename: string, file: Blob): Promise<void>;
+  uploadFiles(files: File[]): Promise<void>;
   getFileMetadataList(): Promise<FileMetadata[]>;
 }
