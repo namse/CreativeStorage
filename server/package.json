@@ -16,6 +16,7 @@
   "dependencies": {
     "koa": "^2.8.1",
     "koa-body": "^4.1.1",
+    "koa-compose": "^4.1.0",
     "koa-router": "^7.4.0",
     "module-alias": "^2.2.1",
     "typescript": "^3.6.3"

@@ -1,16 +1,17 @@
-import Koa from "koa";
-import { fileApiRouter } from "./router";
 import koaBody from "koa-body";
+import Koa from "koa";
+import router from "./router";
 
-const app = new Koa();
+export const app = new Koa();
 
-const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
 app.use(koaBody({
   multipart: true,
 }));
 
-app.use(fileApiRouter.router.routes());
-app.use(fileApiRouter.router.allowedMethods());
+app.use(router);
+
+const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
+
 app.use(async (ctx, next) => {
   ctx.status = 404;
 });
@@ -25,4 +26,3 @@ if (process.env.NODE_ENV !== "test") {
     console.log(`server is listening to port ${PORT}`);
   });
 }
-export { app };

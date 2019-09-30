@@ -1,15 +1,10 @@
 import Koa from "koa";
 import IStorageService from "./IStorageService";
-import { Router } from "./RouterClass";
+import Router from "./RouterClass";
 
-class FileApiRouter extends Router {
+export default class FileApiRouter extends Router {
   constructor(private readonly storageService: IStorageService) {
     super();
-    this.storageService = storageService;
-
-    this.listFiles = this.listFiles.bind(this);
-    this.writeFile = this.writeFile.bind(this);
-    this.readFile = this.readFile.bind(this);
   }
 
   public async listFiles(ctx: Koa.Context) {
@@ -33,5 +28,3 @@ class FileApiRouter extends Router {
     ctx.status = 200;
   }
 }
-
-export default FileApiRouter;

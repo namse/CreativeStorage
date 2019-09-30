@@ -1,7 +1,7 @@
 import fs from "fs";
 import IStorageService, { FileMetadata } from "./IStorageService";
 
-class StorageService implements IStorageService {
+export default class StorageService implements IStorageService {
 
   public readFile(filename: string): Promise<Buffer> {
     return new Promise((resolve, reject) => {
@@ -44,5 +44,3 @@ class StorageService implements IStorageService {
   }
 
 }
-
-export default StorageService;
