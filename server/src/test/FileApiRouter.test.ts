@@ -1,6 +1,6 @@
 import uuid from "uuid/v4";
 import { uploadFile, downloadFile } from "./uploadAndDownloadFile.test";
-import { getFileMetadataList } from "./uploadAndGetFileMetadataList.test";
+import getFileMetadataList from "./uploadAndGetFileMetadataList.test";
 import http from "http";
 import { app } from "../index";
 

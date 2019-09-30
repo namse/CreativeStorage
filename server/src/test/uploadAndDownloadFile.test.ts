@@ -4,7 +4,7 @@ import uuid from "uuid/v4";
 import http from "http";
 import { app } from "../index";
 
-async function uploadFile(filename: string, file: Buffer): Promise<void> {
+export async function uploadFile(filename: string, file: Buffer): Promise<void> {
   const form = new FormData();
   form.append("file", file, filename);
   const uploadImageUrl = "http://localhost:4002/uploadFile";
@@ -18,7 +18,7 @@ async function uploadFile(filename: string, file: Buffer): Promise<void> {
   }
 }
 
-async function downloadFile(filename: string): Promise<Buffer> {
+export async function downloadFile(filename: string): Promise<Buffer> {
   const uploadImageUrl = `http://localhost:4002/downloadFile?filename=${filename}`;
 
   const response = await fetch(uploadImageUrl);
@@ -54,5 +54,3 @@ describe("upload and download file test", () => {
     expect(downloadedFileInBase64).toEqual(imageInBase64);
   });
 });
-
-export { uploadFile, downloadFile };

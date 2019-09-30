@@ -6,7 +6,7 @@ import { FileMetadata } from "../IStorageService";
 import http from "http";
 import { app } from "../index";
 
-async function getFileMetadataList(): Promise<FileMetadata[]> {
+export default async function getFileMetadataList(): Promise<FileMetadata[]> {
   const url = "http://localhost:4002/fileMetadataList";
   const response = await fetch(url);
 
@@ -41,5 +41,3 @@ describe("get FileMetadataList test", () => {
     expect(filenameFromApi).toEqual(expect.arrayContaining([filename]));
   });
 });
-
-export { getFileMetadataList };

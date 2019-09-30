@@ -1,12 +1,15 @@
 import Koa from "koa";
-import { fileApiRouter } from "./router";
+import router from "./router";
+import cors from "@koa/cors";
 import koaBody from "koa-body";
 import AWS from "aws-sdk";
 
+const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
+
 const s3 = new AWS.S3();
-const app = new Koa();
 
 const params = { Bucket: "testbucket", Key: "testobject", Body: "Hello from MinIO!!" };
+
 s3.putObject(params, (err, data) => {
   if (err) {
     console.log(err);
@@ -15,13 +18,16 @@ s3.putObject(params, (err, data) => {
   }
 });
 
-const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
+export const app = new Koa();
+
+app.use(cors());
 app.use(koaBody({
   multipart: true,
 }));
 
-app.use(fileApiRouter.router.routes());
-app.use(fileApiRouter.router.allowedMethods());
+app.use(router);
+
+
 app.use(async (ctx, next) => {
   ctx.status = 404;
 });
@@ -36,4 +42,3 @@ if (process.env.NODE_ENV !== "test") {
     console.log(`server is listening to port ${PORT}`);
   });
 }
-export { app };
