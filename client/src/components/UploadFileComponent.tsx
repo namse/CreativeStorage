@@ -63,15 +63,13 @@ export default class UploadFileComponent extends React.Component<
     if (files) {
       const array = this.fileListToArray(files);
       this.setState((prevState) => ({
-        files: prevState.files.concat(array),
+        files: [...prevState.files, ...array],
       }));
     }
   }
 
   private async sendFiles(): Promise<void> {
-    const promises: Array<Promise<void>> = this.state.files.map((file) =>
-      this.sendRequest(file),
-    );
+    const promises = this.state.files.map((file) => this.sendRequest(file));
     await Promise.all(promises);
     this.onClickClearList();
   }
