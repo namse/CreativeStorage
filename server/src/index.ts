@@ -1,8 +1,19 @@
 import Koa from "koa";
 import { fileApiRouter } from "./router";
 import koaBody from "koa-body";
+import AWS from "aws-sdk";
 
+const s3 = new AWS.S3();
 const app = new Koa();
+
+const params = { Bucket: "testbucket", Key: "testobject", Body: "Hello from MinIO!!" };
+s3.putObject(params, (err, data) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Successfully uploaded data to testbucket/testobject");
+  }
+});
 
 const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
 app.use(koaBody({
