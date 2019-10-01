@@ -6,15 +6,17 @@ import { render } from "@testing-library/react";
 import DownloadFileComponent from "src/components/DownloadFileComponent";
 import { generateTestBlob } from "src/test/browserTest/FileManager.browsertest";
 
-describe("<DownloadFileComponent /> with MockFileManager", () => {
-  test("check li tags were made perfectly", async () => {
-    const fileManager: MockFileManager = new MockFileManager();
+describe(`<DownloadFileComponent /> with MockFileManager`, () => {
+  test(`check li tags were made perfectly with MockFileManager`, async () => {
+    const fileManager = new MockFileManager();
     const numberOfLiTags: number = Math.floor(Math.random() * 10 + 4);
     const filenames: string[] = [];
     for (let i = 0; i < numberOfLiTags; i++) {
-      const file = await generateTestBlob(`${i}`);
-      await fileManager.uploadFile(`${i}.txt`, file);
-      filenames[i] = `${i}.txt`;
+      const testBlob = await generateTestBlob(`${i}`);
+      const filename = `${i}.txt`;
+      const file = new File([testBlob], filename);
+      await fileManager.uploadFile(file);
+      filenames[i] = filename;
     }
 
     const component = render(
