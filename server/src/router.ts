@@ -1,29 +1,18 @@
-import Koa from "koa";
-import Router from "koa-router";
 import StorageService from "./storageService";
+import FileApiRouter from "./FileApiRouter";
+import compose from "koa-compose";
+import Koa from "koa";
 
-const router = new Router();
 const storageService = new StorageService();
+const fileApiRouter = new FileApiRouter(storageService);
 
-router.get("/fileMetadataList", async (ctx: Koa.Context, next) => {
-  ctx.body = await storageService.listFiles();
-  ctx.status = 200;
-});
+fileApiRouter.router.get("/fileMetadataList", (ctx: Koa.Context) => fileApiRouter.listFiles(ctx));
+fileApiRouter.router.post("/uploadFile", (ctx: Koa.Context) => fileApiRouter.writeFile(ctx));
+fileApiRouter.router.get("/downloadFile", (ctx: Koa.Context) => fileApiRouter.readFile(ctx));
 
-router.post("/uploadFile", async (ctx: Koa.Context, next) => {
-  if (!ctx.request.files || !ctx.request.files.file) {
-    ctx.status = 400;
-    ctx.body = "request has no file";
-    return;
-  }
-  const { path, name } = ctx.request.files.file;
-  await storageService.writeFile(path, name);
-  ctx.status = 200;
-});
-
-router.get("/downloadFile", async (ctx: Koa.Context, next) => {
-  ctx.body = await storageService.readFile(ctx.request.query.filename);
-  ctx.status = 200;
-});
+const router = compose([
+  fileApiRouter.router.routes(),
+  fileApiRouter.router.allowedMethods(),
+]);
 
 export default router;

@@ -4,7 +4,7 @@ import getFileMetadataList from "./uploadAndGetFileMetadataList.test";
 import http from "http";
 import { app } from "../index";
 
-describe("upload and download and listFileMetadata test from StorageClass", () => {
+describe("FileApiRouter test", () => {
   let server: http.Server;
   beforeEach(() => {
     server = app.listen(4002);
@@ -34,5 +34,4 @@ describe("upload and download and listFileMetadata test from StorageClass", () =
 
     expect(downloadFiles).toEqual(expect.arrayContaining([imageInBase64]));
   });
-
 });

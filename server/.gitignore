@@ -104,4 +104,7 @@ typings/
 # Ignore all local history of files
 .history
 
+# Ignore uploaded files
+src/uploads/*
+
 # End of https://www.gitignore.io/api/node,visualstudiocode
