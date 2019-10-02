@@ -4,19 +4,15 @@ import cors from "@koa/cors";
 import koaBody from "koa-body";
 import AWS from "aws-sdk";
 
-const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
-
-const s3 = new AWS.S3();
-
-const params = { Bucket: "testbucket", Key: "testobject", Body: "Hello from MinIO!!" };
-
-s3.putObject(params, (err, data) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("Successfully uploaded data to testbucket/testobject");
-  }
+export const s3 = new AWS.S3({
+  accessKeyId: "testman",
+  secretAccessKey: "realtestman",
+  endpoint: "http://127.0.0.1:9000",
+  s3ForcePathStyle: true, // needed with minio
+  signatureVersion: "v4",
 });
+
+const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
 
 export const app = new Koa();
 
@@ -26,7 +22,6 @@ app.use(koaBody({
 }));
 
 app.use(router);
-
 
 app.use(async (ctx, next) => {
   ctx.status = 404;
