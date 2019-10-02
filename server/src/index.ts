@@ -3,7 +3,7 @@ import Koa from "koa";
 import router from "./router";
 import cors from "@koa/cors";
 
-export const app = new Koa();
+const app = new Koa();
 
 app.use(cors());
 app.use(koaBody({
@@ -28,3 +28,5 @@ if (process.env.NODE_ENV !== "test") {
     console.log(`server is listening to port ${PORT}`);
   });
 }
+
+export default app;

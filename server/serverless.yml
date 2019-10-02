@@ -1,0 +1,38 @@
+service: 
+  name: CreativeStorage # service name
+
+# Add serverless-offline
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+provider: 
+  name: aws
+  runtime: nodejs10.x
+  stage: ${opt:stage, 'dev'}    
+
+custom:
+  serverless-offline:
+    port: ${file(./src/config/${self:provider.stage}.json):PORT}
+
+functions:
+  app:
+    handler: src/serverless.handler 
+    events:
+      - http:
+          path: /fileMetadataList
+          method: get
+      - http:
+          path: /uploadFile
+          method: post
+      - http:
+          path: /downloadFile
+          method: get     
+      - http:
+          path: /getTest
+          method: get       
+      - http:
+          path: /postTest
+          method: post                               
+    cors:
+      origin: '*'   
