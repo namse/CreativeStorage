@@ -1,9 +1,8 @@
-import IMinioS3 from "./IMinioS3";
+import ICloudStorageService from "./ICloudStorageService";
 import { s3 } from "./index";
 import { S3 } from "aws-sdk";
 
-export default class MinioS3 implements IMinioS3 {
-
+export default class StorageServiceS3 implements ICloudStorageService {
   public readFile(filename: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const params = { Bucket: "testbucket", Key: filename, Expires: 60 };
@@ -12,12 +11,15 @@ export default class MinioS3 implements IMinioS3 {
     });
   }
 
-  public writeFile(filename: string, contentType: string): Promise<S3.PresignedPost> {
+  public writeFile(
+    filename: string,
+    contentType: string,
+  ): Promise<S3.PresignedPost> {
     return new Promise((resolve, reject) => {
       const params = {
         Bucket: "testbucket",
         Fields: {
-          "Key": filename,
+          Key: filename,
           "Content-Type": contentType,
         },
         Expires: 60,

@@ -1,9 +1,9 @@
 import Koa from "koa";
+import IStorageService from "./IStorageService";
 import Router from "./RouterClass";
-import IMinioS3 from "./IMinioS3";
 
-export default class S3minioRouter extends Router {
-  constructor(private readonly storageService: IMinioS3) {
+export default class RouterFileAPI extends Router {
+  constructor(private readonly storageService: IStorageService) {
     super();
   }
 
@@ -13,12 +13,17 @@ export default class S3minioRouter extends Router {
   }
 
   public async writeFile(ctx: Koa.Context) {
-    ctx.body = await this.storageService.writeFile(ctx.request.query.filename, ctx.request.query.contentType);
+    if (!ctx.request.files || !ctx.request.files.file) {
+      ctx.status = 400;
+      ctx.body = "request has no file";
+      return;
+    }
+    const { path, name } = ctx.request.files.file;
+    await this.storageService.writeFile(path, name);
     ctx.status = 200;
   }
 
   public async readFile(ctx: Koa.Context) {
-    console.log("filename: ", ctx.request.query.filename);
     ctx.body = await this.storageService.readFile(ctx.request.query.filename);
     ctx.status = 200;
   }

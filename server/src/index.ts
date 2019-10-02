@@ -17,9 +17,11 @@ const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
 export const app = new Koa();
 
 app.use(cors());
-app.use(koaBody({
-  multipart: true,
-}));
+app.use(
+  koaBody({
+    multipart: true,
+  }),
+);
 
 app.use(router);
 

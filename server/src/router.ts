@@ -1,29 +1,42 @@
-import StorageService from "./storageService";
-import FileApiRouter from "./FileApiRouter";
+import StorageService from "./StorageService";
+import RouterFileAPI from "./RouterFileAPI";
 import compose from "koa-compose";
 import Koa from "koa";
-import S3minioRouter from "./S3minioRouter";
-import MinioS3 from "./MinioS3";
+import RouterS3 from "./RouterS3";
+import StorageServiceS3 from "./StorageServiceS3";
 
 const storageService = new StorageService();
-const fileApiRouter = new FileApiRouter(storageService);
+const routerFileAPI = new RouterFileAPI(storageService);
 
-fileApiRouter.router.get("/fileMetadataList", (ctx: Koa.Context) => fileApiRouter.listFiles(ctx));
-fileApiRouter.router.post("/uploadFile", (ctx: Koa.Context) => fileApiRouter.writeFile(ctx));
-fileApiRouter.router.get("/downloadFile", (ctx: Koa.Context) => fileApiRouter.readFile(ctx));
+routerFileAPI.router.get("/fileMetadataList", (ctx: Koa.Context) =>
+  routerFileAPI.listFiles(ctx),
+);
+routerFileAPI.router.post("/uploadFile", (ctx: Koa.Context) =>
+  routerFileAPI.writeFile(ctx),
+);
+routerFileAPI.router.get("/downloadFile", (ctx: Koa.Context) =>
+  routerFileAPI.readFile(ctx),
+);
 
-const minioS3 = new MinioS3();
-const s3minioRouter = new S3minioRouter(minioS3);
+const storageServiceS3 = new StorageServiceS3();
+const routerS3 = new RouterS3(storageServiceS3);
 
-s3minioRouter.router.get("/s3FileMetadataList", (ctx: Koa.Context) => s3minioRouter.listFiles(ctx));
-s3minioRouter.router.get("/s3UploadFileUrl", (ctx: Koa.Context) => s3minioRouter.writeFile(ctx));
-s3minioRouter.router.get("/s3DownloadFileUrl", (ctx: Koa.Context) => s3minioRouter.readFile(ctx));
+// routerS3.router.all("/s3", (ctx: Koa. Context) => );
 
+routerS3.router.get("FileMetadataList", (ctx: Koa.Context) =>
+  routerS3.listFiles(ctx),
+);
+routerS3.router.get("/s3UploadFileUrl", (ctx: Koa.Context) =>
+  routerS3.writeFile(ctx),
+);
+routerS3.router.get("/s3DownloadFileUrl", (ctx: Koa.Context) =>
+  routerS3.readFile(ctx),
+);
 const router = compose([
-  fileApiRouter.router.routes(),
-  fileApiRouter.router.allowedMethods(),
-  s3minioRouter.router.routes(),
-  s3minioRouter.router.allowedMethods(),
+  routerFileAPI.router.routes(),
+  routerFileAPI.router.allowedMethods(),
+  routerS3.router.routes(),
+  routerS3.router.allowedMethods(),
 ]);
 
 export default router;
