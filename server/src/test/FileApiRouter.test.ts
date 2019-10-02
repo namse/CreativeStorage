@@ -1,6 +1,4 @@
-import uuid from "uuid/v4";
-import { uploadFile, downloadFile } from "./uploadAndDownloadFile.test";
-import getFileMetadataList from "./uploadAndGetFileMetadataList.test";
+import { getUploadFileUrl, getDownloadFileUrl, getFileMetadataList, uploadFile, downloadFile } from "./testFunctions";
 import http from "http";
 import { app } from "../index";
 
@@ -16,17 +14,23 @@ describe("FileApiRouter test", () => {
 
   it(`should upload file and get FileMetadatalist from server and check it in downloads files`, async () => {
     const imageInBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-    const imageBuffer = Buffer.from(imageInBase64, "base64");
-    const filename = uuid();
+    const contentType = "image/jpeg";
+    const filename = "test.jpeg";
 
-    await uploadFile(filename, imageBuffer);
+    const presignedPostData = await getUploadFileUrl(filename, contentType);
+    uploadFile(presignedPostData);
+    const objectMetadata = await getFileMetadataList();
+    if (!objectMetadata.Contents) {
+      throw new Error();
+    }
 
-    const fileMetadataList = await getFileMetadataList();
-    const filenameFromApi = fileMetadataList.map((fileMetadata) => {
-      return fileMetadata.filename;
+    let filenameFromS3: Array<string | undefined>;
+    filenameFromS3 = objectMetadata.Contents.map((fileMetadata) => {
+      return fileMetadata.Key;
     });
 
-    const downloadFiles: string[] = await Promise.all(filenameFromApi.map(async (filenameToBeDownloaded: string) => {
+    const presignedDownloadFileUrl = await getDownloadFileUrl(filename);
+    const downloadFiles: string[] = await Promise.all(filenameFromS3.map(async (filenameToBeDownloaded) => {
       const downloadedFile = await downloadFile(filenameToBeDownloaded);
       const downloadedFileInBase64 = downloadedFile.toString("base64");
       return downloadedFileInBase64;
