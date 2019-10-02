@@ -2,14 +2,7 @@ import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
 
 export default class FileManager implements IFileManager {
   public async getDownloadUrl(filename: string): Promise<string> {
-    const response = await fetch(
-      `http://localhost:4002/downloadfile?filename=${filename}`,
-    );
-    const file = await response.blob();
-
-    const dataUrl = await this.convertFileToDataUrl(file);
-
-    return dataUrl;
+    return `http://localhost:4002/downloadfile?filename=${filename}`;
   }
 
   public async uploadFile(file: File): Promise<void> {
