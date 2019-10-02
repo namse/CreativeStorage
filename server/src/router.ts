@@ -2,7 +2,7 @@ import Koa from "koa";
 import compose from "koa-compose";
 import StorageService from "./storageService";
 import FileApiRouter from "./FileApiRouter";
-import testRouter from "./testRouter";
+import serverlessRouter from "./testRouter";
 
 const storageService = new StorageService();
 const fileApiRouter = new FileApiRouter(storageService);
@@ -14,8 +14,8 @@ fileApiRouter.router.get("/downloadFile", (ctx: Koa.Context) => fileApiRouter.re
 const router = compose([
   fileApiRouter.router.routes(),
   fileApiRouter.router.allowedMethods(),
-  testRouter.routes(),
-  testRouter.allowedMethods(),
+  serverlessRouter.routes(),
+  serverlessRouter.allowedMethods(),
 ]);
 
 export default router;
