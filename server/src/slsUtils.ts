@@ -1,21 +1,29 @@
-import { spawn } from "child_process";
+import { spawn, ChildProcessWithoutNullStreams } from "child_process";
 
-let slsProcess: any;
-const start = () => {
+const isWindows = /^win/.test(process.platform);
+const npmCommand = isWindows ? "npm.cmd" : "npm";
+
+let slsProcess: ChildProcessWithoutNullStreams;
+export const start = () => {
   return new Promise((resolve, reject) => {
-    slsProcess = spawn("npm", ["run", "sls-offline", "--noTimeout"]);
-    slsProcess.stdout.on("data", (data: any) => {
-      if (data.includes("Offline listening on")) {
+    slsProcess = spawn(npmCommand, ["run", "sls-offline", "--", "--noTimeout"]);
+    slsProcess.stdout.on("data", (data) => {
+      const log = (data as Buffer).toString("utf-8");
+      console.log(log);
+      if (log.includes("Offline listening on")) {
         resolve();
       }
     });
-    slsProcess.stderr.on("data", (err: any) => {
-      reject(err);
+    slsProcess.stderr.on("data", (data) => {
+      const log = (data as Buffer).toString("utf-8");
+      reject(log);
+    });
+    slsProcess.on("error", (data) => {
+      reject(data);
     });
   });
 };
+
 export const stop = () => {
   slsProcess.kill();
 };
-
-export default start;

@@ -1,4 +1,4 @@
-import start, { stop } from "../slsUtils";
+import { start, stop } from "../slsUtils";
 import fetch from "node-fetch";
 
 async function getTest(): Promise<string> {
