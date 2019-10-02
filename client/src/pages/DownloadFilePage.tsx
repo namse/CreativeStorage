@@ -1,13 +1,14 @@
 import * as React from "react";
-import MockFileManager from "src/FileManager/MockFileManager";
 import DownloadFileComponent from "src/components/DownloadFileComponent";
+import FileManager from "src/FileManager/FileManager";
 
 export default class FileListAndDownloadPage extends React.Component {
   public render() {
     return (
       <div>
+        Download Files
         <DownloadFileComponent
-          fileManager={new MockFileManager()}
+          fileManager={new FileManager()}
         ></DownloadFileComponent>
       </div>
     );

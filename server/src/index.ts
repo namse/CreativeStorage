@@ -1,7 +1,7 @@
+import koaBody from "koa-body";
 import Koa from "koa";
 import router from "./router";
 import cors from "@koa/cors";
-import koaBody from "koa-body";
 import AWS from "aws-sdk";
 
 export const s3 = new AWS.S3({

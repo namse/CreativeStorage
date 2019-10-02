@@ -1,14 +1,19 @@
-import React, { Component } from "react";
+import * as React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import HomePage from "src/pages/HomePage";
+import UploadFilePage from "src/pages/UploadFilePage";
 import DownloadFilePage from "src/pages/DownloadFilePage";
-import HeaderComponent from "src/components/HeaderComponent";
 
-export default class App extends Component {
+export default class App extends React.Component {
   public render() {
     return (
-      <div>
-        <HeaderComponent />
-        <DownloadFilePage />
-      </div>
+      <Router>
+        <div>
+          <Route path="/" component={HomePage} />
+          <Route path="/upload" component={UploadFilePage} />
+          <Route path="/download" component={DownloadFilePage} />
+        </div>
+      </Router>
     );
   }
 }
