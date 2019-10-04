@@ -1,8 +1,9 @@
 import koaBody from "koa-body";
 import Koa from "koa";
-import router from "./router";
+import CreateRouter from "./router";
 import cors from "@koa/cors";
 import AWS from "aws-sdk";
+import StorageServiceS3 from "./StorageServiceS3";
 
 export const s3 = new AWS.S3({
   accessKeyId: "testman",
@@ -23,7 +24,7 @@ app.use(
   }),
 );
 
-app.use(router);
+CreateRouter(app, new StorageServiceS3());
 
 app.use(async (ctx, next) => {
   ctx.status = 404;

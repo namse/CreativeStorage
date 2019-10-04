@@ -18,7 +18,7 @@ export default class StorageServiceS3 implements ICloudStorageService {
       Expires: 60,
     };
     const presignedUrl = s3.createPresignedPost(params);
-    return (presignedUrl as any) as object;
+    return presignedUrl;
   }
 
   public getFileMetadataList(): Promise<object[]> {
@@ -32,7 +32,7 @@ export default class StorageServiceS3 implements ICloudStorageService {
           reject(err);
           return;
         }
-        resolve((data.Contents as any) as object[]);
+        resolve(data.Contents);
       });
     });
   }

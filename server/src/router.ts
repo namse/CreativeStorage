@@ -1,24 +1,23 @@
-import compose from "koa-compose";
 import Koa from "koa";
 import RouterS3 from "./RouterS3";
-import StorageServiceS3 from "./StorageServiceS3";
+import ICloudStorageService from "./ICloudStorageService";
 
-const storageServiceS3 = new StorageServiceS3();
-const routerS3 = new RouterS3(storageServiceS3);
+export default function CreateRouter(
+  app: Koa,
+  storageService: ICloudStorageService,
+): void {
+  const routerS3 = new RouterS3(storageService);
 
-routerS3.router.get("/filemetadatalist", (ctx: Koa.Context) =>
-  routerS3.getFileMetadataList(ctx),
-);
-routerS3.router.get("/uploadfileurl", (ctx: Koa.Context) =>
-  routerS3.getUploadFileUrl(ctx),
-);
-routerS3.router.get("/downloadfileurl", (ctx: Koa.Context) =>
-  routerS3.getDownloadFileUrl(ctx),
-);
+  routerS3.router.get("/filemetadatalist", (ctx: Koa.Context) =>
+    routerS3.getFileMetadataList(ctx),
+  );
+  routerS3.router.get("/uploadfileurl", (ctx: Koa.Context) =>
+    routerS3.getUploadFileUrl(ctx),
+  );
+  routerS3.router.get("/downloadfileurl", (ctx: Koa.Context) =>
+    routerS3.getDownloadFileUrl(ctx),
+  );
 
-const router = compose([
-  routerS3.router.routes(),
-  routerS3.router.allowedMethods(),
-]);
-
-export default router;
+  app.use(routerS3.router.routes());
+  app.use(routerS3.router.allowedMethods());
+}
