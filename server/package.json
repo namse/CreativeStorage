@@ -10,7 +10,8 @@
     "watch-start": "concurrently --kill-others \"tsc --watch\" \"nodemon dist/index.js\"",
     "start": "node dist/index.js",
     "lint": "tslint -c tslint.json",
-    "sls-offline": "cross-env NODE_ENV=test sls offline"
+    "sls-offline": "cross-env NODE_ENV=test sls offline",
+    "deploy": "sls deploy"
   },
   "author": "",
   "license": "ISC",
@@ -44,6 +45,7 @@
     "node-fetch": "^2.6.0",
     "nodemon": "^1.19.2",
     "ts-jest": "^24.1.0",
+    "tslint": "^5.20.0",
     "uuid": "^3.3.3"
   }
 }

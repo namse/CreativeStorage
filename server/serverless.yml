@@ -9,11 +9,14 @@ plugins:
 provider: 
   name: aws
   runtime: nodejs10.x
-  stage: ${opt:stage, 'dev'}    
+  region : ap-northeast-2
+  stage: dev
 
 custom:
+  myStage: ${opt:stage, self:provider.stage}
+  myRegion: ${opt:region, self:provider.region}
   serverless-offline:
-    port: ${file(./src/config/${self:provider.stage}.json):PORT}
+    port: ${file(./src/config/${self:custom.myStage}.json):PORT}   
 
 functions:
   app:
@@ -33,6 +36,25 @@ functions:
           method: get       
       - http:
           path: /postTest
-          method: post                               
+          method: post  
+      - http:
+          paht: /
+          method: get                                 
     cors:
       origin: '*'   
+
+package:
+  exclude: # 용량을 줄이기 위해서 static 폴더를 제외하고 불포함
+    - ./client/**
+    - ./server/src/test/**
+    - ./server/.build/**
+    - ./server/.vscode/**
+    - ./server/dist/**
+    - package.json
+    - package-lock.json
+    - .gitignore
+    - .editorconfig
+    - jest.config.js
+    - yarn.lock
+  include:
+        

@@ -9,8 +9,7 @@ export const start = () => {
     slsProcess = spawn(npmCommand, ["run", "sls-offline", "--", "--noTimeout"]);
     slsProcess.stdout.on("data", (data) => {
       const log = (data as Buffer).toString("utf-8");
-      console.log(log);
-      if (log.includes("Offline listening on")) {
+      if (log.includes("listening on")) {
         resolve();
       }
     });

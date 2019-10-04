@@ -15,4 +15,8 @@ serverlessRouter.post("/postTest", (ctx: Koa.Context) => {
   ctx.status = 200;
 });
 
+serverlessRouter.post("/", (ctx: Koa.Context) => {
+  ctx.status = 200;
+});
+
 export default serverlessRouter;
