@@ -1,14 +1,17 @@
-import ICloudStorageService from "./ICloudStorageService";
+import IStorageService, { preSingnedPostData } from "./IStorageService";
 import { s3 } from "./index";
 
-export default class StorageServiceS3 implements ICloudStorageService {
+export default class StorageService implements IStorageService {
   public getDownloadFileUrl(filename: string): string {
     const params = { Bucket: "testbucket", Key: filename, Expires: 60 };
     const presignedUrl: string = s3.getSignedUrl("getObject", params);
     return presignedUrl;
   }
 
-  public getUploadFileUrl(filename: string, contentType: string): object {
+  public getUploadPresginedPostData(
+    filename: string,
+    contentType: string,
+  ): preSingnedPostData {
     const params = {
       Bucket: "testbucket",
       Fields: {
@@ -17,8 +20,8 @@ export default class StorageServiceS3 implements ICloudStorageService {
       },
       Expires: 60,
     };
-    const presignedUrl = s3.createPresignedPost(params);
-    return presignedUrl;
+    const presignedPostData = s3.createPresignedPost(params);
+    return presignedPostData;
   }
 
   public getFileMetadataList(): Promise<object[]> {

@@ -1,9 +1,9 @@
 import Koa from "koa";
 import Router from "./RouterClass";
-import ICloudStorageService from "./ICloudStorageService";
+import IStorageService from "./IStorageService";
 
-export default class RouterS3 extends Router {
-  constructor(private readonly storageService: ICloudStorageService) {
+export default class Controller extends Router {
+  constructor(private readonly storageService: IStorageService) {
     super();
   }
 
@@ -13,7 +13,7 @@ export default class RouterS3 extends Router {
   }
 
   public getUploadFileUrl(ctx: Koa.Context) {
-    ctx.body = this.storageService.getUploadFileUrl(
+    ctx.body = this.storageService.getUploadPresginedPostData(
       ctx.request.query.filename,
       ctx.request.query.contentType,
     );
