@@ -1,40 +1,27 @@
 import ICloudStorageService from "./ICloudStorageService";
 import { s3 } from "./index";
-import { S3 } from "aws-sdk";
 
 export default class StorageServiceS3 implements ICloudStorageService {
-  public readFile(filename: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const params = { Bucket: "testbucket", Key: filename, Expires: 60 };
-      const presignedUrl: string = s3.getSignedUrl("getObject", params);
-      resolve(presignedUrl);
-    });
+  public getDownloadFileUrl(filename: string): string {
+    const params = { Bucket: "testbucket", Key: filename, Expires: 60 };
+    const presignedUrl: string = s3.getSignedUrl("getObject", params);
+    return presignedUrl;
   }
 
-  public writeFile(
-    filename: string,
-    contentType: string,
-  ): Promise<S3.PresignedPost> {
-    return new Promise((resolve, reject) => {
-      const params = {
-        Bucket: "testbucket",
-        Fields: {
-          Key: filename,
-          "Content-Type": contentType,
-        },
-        Expires: 60,
-      };
-      s3.createPresignedPost(params, (err, presignedUrl) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(presignedUrl);
-      });
-    });
+  public getUploadFileUrl(filename: string, contentType: string): object {
+    const params = {
+      Bucket: "testbucket",
+      Fields: {
+        "Key": filename,
+        "Content-Type": contentType,
+      },
+      Expires: 60,
+    };
+    const presignedUrl = s3.createPresignedPost(params);
+    return (presignedUrl as any) as object;
   }
 
-  public listFiles(): Promise<S3.ListObjectsV2Output> {
+  public getFileMetadataList(): Promise<object[]> {
     return new Promise((resolve, reject) => {
       const params = {
         Bucket: "testbucket",
@@ -45,7 +32,7 @@ export default class StorageServiceS3 implements ICloudStorageService {
           reject(err);
           return;
         }
-        resolve(data);
+        resolve((data.Contents as any) as object[]);
       });
     });
   }
