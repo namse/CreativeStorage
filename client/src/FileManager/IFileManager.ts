@@ -1,5 +1,5 @@
 export type FileMetadata = {
-  filename: string;
+  Key: string;
 };
 
 export default interface IFileManager {

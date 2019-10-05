@@ -1,5 +1,5 @@
 import * as React from "react";
-import MockFileManager from "src/FileManager/MockFileManager";
+import S3FileManager from "src/FileManager/MockFileManager";
 import UploadFileComponent from "src/components/UploadFileComponent";
 
 export default class UploadFilePage extends React.Component {
@@ -7,7 +7,7 @@ export default class UploadFilePage extends React.Component {
     return (
       <div>
         <UploadFileComponent
-          fileManager={new MockFileManager()}
+          fileManager={new S3FileManager()}
         ></UploadFileComponent>
       </div>
     );

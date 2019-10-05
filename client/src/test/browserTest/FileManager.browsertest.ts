@@ -61,10 +61,10 @@ testTargetFileManagers.forEach((fileManager) => {
       const fileMetadataList = await fileManager.getFileMetadataList();
 
       const expectedMetadata: FileMetadata = {
-        filename,
+        Key: filename,
       };
       const actualMetadata = fileMetadataList.find(
-        (metadata) => metadata.filename === filename,
+        (metadata) => metadata.Key === filename,
       );
       expect(actualMetadata).not.toBeUndefined();
       expect(expectedMetadata).toEqual(actualMetadata);
