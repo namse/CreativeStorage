@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "set NODE_ENV=test&& jest --runInBand",
+    "test": "cross-env NODE_ENV=test&& jest --runInBand",
     "build": "tsc",
     "watch": "tsc -w",
     "watch-start": "concurrently --kill-others \"tsc --watch\" \"nodemon dist/index.js\"",
@@ -14,8 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.538.0",
     "@koa/cors": "^2.2.3",
+    "aws-sdk": "^2.538.0",
     "koa": "^2.8.1",
     "koa-body": "^4.1.1",
     "koa-compose": "^4.1.0",
@@ -34,6 +34,7 @@
     "@types/node-fetch": "^2.5.0",
     "@types/uuid": "^3.4.5",
     "concurrently": "^4.1.2",
+    "cross-env": "^6.0.3",
     "form-data": "^2.5.1",
     "jest": "^24.9.0",
     "node-fetch": "^2.6.0",

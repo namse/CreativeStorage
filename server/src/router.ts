@@ -2,7 +2,7 @@ import Koa from "koa";
 import Controller from "./Controller";
 import IStorageService from "./IStorageService";
 
-export default function ApplyRouter(
+export default function applyRouter(
   app: Koa,
   storageService: IStorageService,
 ): void {
@@ -12,10 +12,10 @@ export default function ApplyRouter(
     controller.getFileMetadataList(ctx),
   );
   controller.router.get("/uploadfileurl", (ctx: Koa.Context) =>
-    controller.getUploadFileUrl(ctx),
+    controller.getPresginedPostDataForUpload(ctx),
   );
   controller.router.get("/downloadfileurl", (ctx: Koa.Context) =>
-    controller.getDownloadFileUrl(ctx),
+    controller.getUrlForDownloadFile(ctx),
   );
 
   app.use(controller.router.routes());

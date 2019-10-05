@@ -12,16 +12,16 @@ export default class Controller extends Router {
     ctx.status = 200;
   }
 
-  public getUploadFileUrl(ctx: Koa.Context) {
-    ctx.body = this.storageService.getUploadPresginedPostData(
+  public getPresginedPostDataForUpload(ctx: Koa.Context) {
+    ctx.body = this.storageService.getPresginedPostDataForUpload(
       ctx.request.query.filename,
       ctx.request.query.contentType,
     );
     ctx.status = 200;
   }
 
-  public getDownloadFileUrl(ctx: Koa.Context) {
-    ctx.body = this.storageService.getDownloadFileUrl(
+  public getUrlForDownloadFile(ctx: Koa.Context) {
+    ctx.body = this.storageService.getUrlForDownloadFile(
       ctx.request.query.filename,
     );
     ctx.status = 200;

@@ -10,6 +10,17 @@ const serviceUrl = "http://127.0.0.1:9000";
 const accessKey = "testman";
 const bucket = "testbucket";
 const region = "us-east-1";
+const filename = "test.jpeg";
+const contentType = "image/jpeg";
+const yyyymmdd = new Date()
+  .toISOString()
+  .replace(/-/gi, "")
+  .split("T")[0];
+const hhmm = new Date()
+  .toISOString()
+  .replace(/:/gi, "")
+  .split("T")[1]
+  .substring(0, 4);
 
 describe(`${storageService.constructor.name} test`, () => {
   let server: http.Server;
@@ -21,21 +32,8 @@ describe(`${storageService.constructor.name} test`, () => {
     server.close();
   });
 
-  const filename = "test.jpeg";
-  const contentType = "image/jpeg";
-
-  const yyyymmdd = new Date()
-    .toISOString()
-    .replace(/-/gi, "")
-    .split("T")[0];
-  const hhmm = new Date()
-    .toISOString()
-    .replace(/:/gi, "")
-    .split("T")[1]
-    .substring(0, 4);
-
   it("should get presigned post data for uploading file", async () => {
-    const presignedPostData = storageService.getUploadPresginedPostData(
+    const presignedPostData = storageService.getPresginedPostDataForUpload(
       filename,
       contentType,
     );
@@ -59,7 +57,7 @@ describe(`${storageService.constructor.name} test`, () => {
 
   it("should get presigned url for download file", async () => {
     const presignedDownloadFileurlExpiry = 60;
-    const presignedDownloadFileUrl = storageService.getDownloadFileUrl(
+    const presignedDownloadFileUrl = storageService.getUrlForDownloadFile(
       filename,
     );
     const expected: string[] = [
@@ -83,7 +81,7 @@ describe(`${storageService.constructor.name} test`, () => {
       const imageInBase64 =
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
       const imageBuffer = Buffer.from(imageInBase64, "base64");
-      const presignedPost = storageService.getUploadPresginedPostData(
+      const presignedPost = storageService.getPresginedPostDataForUpload(
         filename,
         contentType,
       );
@@ -100,5 +98,26 @@ describe(`${storageService.constructor.name} test`, () => {
     }
     expect(Array.isArray(contents)).toBe(true);
     expect(contents.length).not.toBe(0);
+
+    const desiredContentMetadata = {
+      Key: expect.stringMatching(/.{1,}/),
+      LastModified: expect.any(Date),
+      ETag: expect.stringMatching(/.{1,}/),
+      Size: expect.any(Number),
+      StorageClass: expect.any(String),
+      // this property should be either "STANDARD_IA" or "DEEP_ARCHIVE" in real service.
+      Owner: {
+        DisplayName: expect.any(String),
+        ID: expect.any(String),
+      },
+    };
+    expect(contents[0]).toMatchObject(desiredContentMetadata);
+
+    let expectedStorageClass = new RegExp("");
+    process.env.NODE_ENV === "test"
+      ? (expectedStorageClass = RegExp(/STANDARD/))
+      : (expectedStorageClass = RegExp(/STANDARD_IA|DEEP_ARCHIVE/));
+
+    expect(contents[0].StorageClass).toMatch(expectedStorageClass);
   });
 });

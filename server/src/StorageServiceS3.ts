@@ -1,17 +1,20 @@
-import IStorageService, { preSingnedPostData } from "./IStorageService";
+import IStorageService, {
+  preSignedPostData,
+  fileMetadata,
+} from "./IStorageService";
 import { s3 } from "./index";
 
 export default class StorageService implements IStorageService {
-  public getDownloadFileUrl(filename: string): string {
+  public getUrlForDownloadFile(filename: string): string {
     const params = { Bucket: "testbucket", Key: filename, Expires: 60 };
     const presignedUrl: string = s3.getSignedUrl("getObject", params);
     return presignedUrl;
   }
 
-  public getUploadPresginedPostData(
+  public getPresginedPostDataForUpload(
     filename: string,
     contentType: string,
-  ): preSingnedPostData {
+  ): preSignedPostData {
     const params = {
       Bucket: "testbucket",
       Fields: {
@@ -24,7 +27,7 @@ export default class StorageService implements IStorageService {
     return presignedPostData;
   }
 
-  public getFileMetadataList(): Promise<object[]> {
+  public getFileMetadataList(): Promise<fileMetadata[]> {
     return new Promise((resolve, reject) => {
       const params = {
         Bucket: "testbucket",
