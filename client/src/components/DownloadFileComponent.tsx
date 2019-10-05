@@ -65,19 +65,25 @@ export default class DownloadFileComponent extends React.Component<
   }
 
   private async onClickDownload() {
-    const promises = this.state.selectedFiles.map(async (filename) => {
-      return await this.props.fileManager.getDownloadUrl(filename);
-    });
-    const downloadUrls = await Promise.all(promises);
     const aTag = document.createElement("a");
     document.body.appendChild(aTag);
-    downloadUrls.forEach(async (url) => {
-      // aTag.setAttribute("href", url);
-      // aTag.setAttribute("target", "_blank");
-      window.open(url);
-      // aTag.click();
+    this.state.selectedFiles.forEach(async (filename) => {
+      const downloadUrl = await this.props.fileManager.getDownloadUrl(filename);
+      aTag.download = filename;
+      aTag.href = downloadUrl;
+      aTag.target = "_blank";
+      aTag.click();
     });
     document.body.removeChild(aTag);
+
+    // const iframeTag = document.createElement("iframe");
+    // iframeTag.style = 'display:none;';
+    // document.body.appendChild(iframeTag);
+    // this.state.selectedFiles.forEach(async (filename) => {
+    //   const downloadUrl = await this.props.fileManager.getDownloadUrl(filename);
+    //   iframeTag.src = downloadUrl;
+    // });
+    // document.body.removeChild(iframeTag);
   }
 
   private delay(ms: number) {
