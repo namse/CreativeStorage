@@ -6,8 +6,8 @@ import { render } from "@testing-library/react";
 import DownloadFileComponent from "src/components/DownloadFileComponent";
 import { generateTestBlob } from "src/test/browserTest/FileManager.browsertest";
 
-describe(`<DownloadFileComponent /> with MockFileManager`, () => {
-  test(`check li tags were made perfectly with MockFileManager`, async () => {
+describe(`<DownloadFileComponent />`, () => {
+  test(`check li tags were made perfectly`, async () => {
     const fileManager = new MockFileManager();
     const numberOfLiTags: number = Math.floor(Math.random() * 10 + 4);
     const filenames: string[] = [];

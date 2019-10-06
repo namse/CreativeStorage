@@ -1,5 +1,13 @@
 export type FileMetadata = {
-  Key: string;
+  Key?: string;
+  LastModified?: Date;
+  ETag?: string;
+  Size?: number;
+  StorageClass?: string;
+  Owner?: {
+    DisplayName?: string;
+    ID?: string;
+  };
 };
 
 export default interface IFileManager {

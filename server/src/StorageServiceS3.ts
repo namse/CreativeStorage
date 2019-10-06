@@ -6,7 +6,12 @@ import { s3 } from "./index";
 
 export default class StorageService implements IStorageService {
   public getUrlForDownloadFile(filename: string): string {
-    const params = { Bucket: "testbucket", Key: filename, Expires: 60 };
+    const params = {
+      Bucket: "testbucket",
+      Key: filename,
+      Expires: 60,
+      ResponseContentDisposition: "attatchment",
+    };
     const presignedUrl: string = s3.getSignedUrl("getObject", params);
     return presignedUrl;
   }
