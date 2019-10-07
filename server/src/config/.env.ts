@@ -1,0 +1,4 @@
+export const envModule = {
+  AWS_ACCESS_KEY: "PLEASE INPUT YOUR KEY",
+  AWS_SECRET_ACCESS_KEY: "PLESASE INPUT YOUR KEY",
+};

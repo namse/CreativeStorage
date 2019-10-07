@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@koa/cors": "^2.2.3",
-    "aws-sdk": "^2.538.0",
+    "aws-sdk": "^2.543.0",
     "koa": "^2.8.1",
     "koa-body": "^4.1.1",
     "koa-compose": "^4.1.0",
