@@ -26,4 +26,11 @@ export default class Controller extends Router {
     );
     ctx.status = 200;
   }
+
+  public getUrlForDeleteFile(ctx: Koa.Context) {
+    ctx.body = this.storageService.getUrlForDeleteFile(
+      ctx.request.query.filename,
+    );
+    ctx.status = 200;
+  }
 }

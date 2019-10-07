@@ -16,6 +16,16 @@ export default class StorageService implements IStorageService {
     return presignedUrl;
   }
 
+  public getUrlForDeleteFile(filename: string): string {
+    const params = {
+      Bucket: "testbucket",
+      Key: filename,
+      Expires: 60,
+    };
+    const presignedUrl: string = s3.getSignedUrl("deleteObject", params);
+    return presignedUrl;
+  }
+
   public getPresginedPostDataForUpload(
     filename: string,
     contentType: string,

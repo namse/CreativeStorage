@@ -30,6 +30,15 @@ export default class MockFileManager implements IFileManager {
     };
   }
 
+  public async deleteFile(filename: string): Promise<void> {
+    const fileInfo = this.mockFileRepository[filename];
+    if (!fileInfo) {
+      throw new Error(`file ${filename} doesn't exists`);
+    }
+
+    delete this.mockFileRepository[filename];
+  }
+
   public async getFileMetadataList(): Promise<FileMetadata[]> {
     return Object.values(this.mockFileRepository).map((info) => info.metadata);
   }

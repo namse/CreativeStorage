@@ -1,5 +1,5 @@
 export type FileMetadata = {
-  Key?: string;
+  Key: string;
   LastModified?: Date;
   ETag?: string;
   Size?: number;
@@ -14,4 +14,5 @@ export default interface IFileManager {
   getDownloadUrl(filename: string): Promise<string>;
   uploadFile(files: File): Promise<void>;
   getFileMetadataList(): Promise<FileMetadata[]>;
+  deleteFile(filename: string): Promise<void>;
 }

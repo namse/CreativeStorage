@@ -47,6 +47,7 @@ testTargetFileManagers.forEach((fileManager) => {
       const actualMetadata = fileMetadataList.find(
         (metadata) => metadata.Key === filename,
       );
+
       expect(actualMetadata).toHaveProperty("Key");
       expect(actualMetadata).toHaveProperty("LastModified");
       expect(actualMetadata).toHaveProperty("ETag");
@@ -54,6 +55,17 @@ testTargetFileManagers.forEach((fileManager) => {
       expect(actualMetadata).toHaveProperty("StorageClass");
       expect(actualMetadata).toHaveProperty("Owner");
       expect(actualMetadata).not.toBeUndefined();
+    });
+
+    it(`should delete file(${fileManager.constructor.name})`, async () => {
+      await fileManager.deleteFile(filename);
+      const fileMetadataList = await fileManager.getFileMetadataList();
+
+      const actualMetadata = fileMetadataList.find(
+        (metadata) => metadata.Key === filename,
+      );
+
+      expect(actualMetadata).toBe(undefined);
     });
   });
 });

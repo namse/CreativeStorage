@@ -17,6 +17,9 @@ export default function applyRouter(
   controller.router.get("/downloadfileurl", (ctx: Koa.Context) =>
     controller.getUrlForDownloadFile(ctx),
   );
+  controller.router.get("/deletefileurl", (ctx: Koa.Context) =>
+    controller.getUrlForDeleteFile(ctx),
+  );
 
   app.use(controller.router.routes());
   app.use(controller.router.allowedMethods());

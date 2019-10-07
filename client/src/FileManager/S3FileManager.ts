@@ -5,8 +5,8 @@ export default class S3FileManager implements IFileManager {
     const response = await fetch(
       `http://localhost:4002/downloadfileurl?filename=${filename}`,
     );
-    const s3Url = await response.text();
-    return s3Url;
+    const downloadUrl = await response.text();
+    return downloadUrl;
   }
 
   public async uploadFile(file: File): Promise<void> {
@@ -29,5 +29,13 @@ export default class S3FileManager implements IFileManager {
     const response = await fetch("http://localhost:4002/filemetadatalist");
     const fileMetadataList = await response.json();
     return fileMetadataList;
+  }
+
+  public async deleteFile(filename: string): Promise<void> {
+    const response = await fetch(
+      `http://localhost:4002/deletefileurl?filename=${filename}`,
+    );
+    const deleteUrl = await response.text();
+    const deleteResponse = await fetch(deleteUrl, { method: "DELETE" });
   }
 }
