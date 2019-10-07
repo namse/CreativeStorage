@@ -1,27 +1,36 @@
 import IStorageService, {
   preSignedPostData,
   fileMetadata,
+  parameterForSDKMethod,
 } from "./IStorageService";
-import { s3 } from "./index";
+import AWS from "aws-sdk";
+import { envModule } from "../.env";
+
+export const s3 = new AWS.S3({
+  accessKeyId: envModule.AWS_ACCESS_KEY,
+  secretAccessKey: envModule.AWS_SECRET_ACCESS_KEY,
+  endpoint: envModule.AWS_S3_BUCKET_ENDPOINT,
+  // s3ForcePathStyle: true, // needed with minio
+  signatureVersion: "v4",
+});
+
+const params: parameterForSDKMethod = {
+  Bucket: "testbucket-creativstorage",
+  region: "ap-northeast-2",
+};
 
 export default class StorageService implements IStorageService {
   public getUrlForDownloadFile(filename: string): string {
-    const params = {
-      Bucket: "testbucket",
-      Key: filename,
-      Expires: 60,
-      ResponseContentDisposition: "attatchment",
-    };
+    params.Key = filename;
+    params.Expires = 3600;
+    params.ResponseContentDisposition = "attatchment";
     const presignedUrl: string = s3.getSignedUrl("getObject", params);
     return presignedUrl;
   }
 
   public getUrlForDeleteFile(filename: string): string {
-    const params = {
-      Bucket: "testbucket",
-      Key: filename,
-      Expires: 60,
-    };
+    params.Key = filename;
+    params.Expires = 3600;
     const presignedUrl: string = s3.getSignedUrl("deleteObject", params);
     return presignedUrl;
   }
@@ -30,25 +39,19 @@ export default class StorageService implements IStorageService {
     filename: string,
     contentType: string,
   ): preSignedPostData {
-    const params = {
-      Bucket: "testbucket",
-      Fields: {
-        "Key": filename,
-        "Content-Type": contentType,
-      },
-      Expires: 60,
+    params.Fields = {
+      "Key": filename,
+      "Content-Type": contentType,
     };
+    params.Expires = 3600;
     const presignedPostData = s3.createPresignedPost(params);
     return presignedPostData;
   }
 
   public getFileMetadataList(): Promise<fileMetadata[]> {
     return new Promise((resolve, reject) => {
-      const params = {
-        Bucket: "testbucket",
-        MaxKeys: 1000,
-      };
-      s3.listObjectsV2(params, (err, data) => {
+      params.MaxKeys = 1000;
+      s3.listObjectsV2(params as AWS.S3.ListObjectsV2Request, (err, data) => {
         if (err) {
           reject(err);
           return;

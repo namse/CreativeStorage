@@ -5,6 +5,16 @@ export type preSignedPostData = {
   };
 };
 
+export type parameterForSDKMethod = {
+  Bucket?: string;
+  Expires?: number;
+  region?: string;
+  Key?: string;
+  ResponseContentDisposition?: string;
+  Fields?: object;
+  MaxKeys?: number;
+};
+
 export type fileMetadata = {
   Key?: string;
   LastModified?: Date;

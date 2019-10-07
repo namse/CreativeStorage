@@ -29,12 +29,6 @@ export default class DownloadFileComponent extends React.Component<
     });
   }
 
-  public async reRender() {
-    this.setState({
-      fileMetadataList: await this.props.fileManager.getFileMetadataList(),
-    });
-  }
-
   public render() {
     return (
       <div>
