@@ -19,9 +19,40 @@ export default class S3FileManager implements IFileManager {
       form.append(key, presignedPost.fields[key]);
     });
     form.append("file", file);
-    const uploadResponse = await fetch(presignedPost.url, {
-      method: "POST",
-      body: form,
+    // const uploadResponse = await fetch(presignedPost.url, {
+    //   method: "POST",
+    //   body: form,
+    // });
+    await new Promise((resolve, reject) => {
+      const req = new XMLHttpRequest();
+      req.upload.addEventListener("progress", (event) => {
+        if (event.lengthComputable) {
+          // const copy = { ...this.state.uploadProgress };
+          // copy[file.name] = {
+          //   state: "pending",
+          //   percentage: (event.loaded / event.total) * 100,
+          // };
+          // this.setState({ uploadProgress: copy });
+          console.log("percentage : ", (event.loaded / event.total) * 100);
+        }
+      });
+      req.upload.addEventListener("load", (event) => {
+        // const copy = { ...this.state.uploadProgress };
+        // copy[file.name] = { state: "done", percentage: 100 };
+        // this.setState({ uploadProgress: copy });
+        resolve(req.response);
+      });
+      req.upload.addEventListener("error", (event) => {
+        // const copy = { ...this.state.uploadProgress };
+        // copy[file.name] = { state: "error", percentage: 0 };
+        // this.setState({ uploadProgress: copy });
+        console.log(req.response);
+        reject(req.response);
+      });
+      req.open("POST", presignedPost.url);
+      req.send(file);
+      console.log(file);
+      console.log(req.response);
     });
   }
 
