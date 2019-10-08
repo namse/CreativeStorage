@@ -32,40 +32,57 @@ export default class DownloadFileComponent extends React.Component<
   public render() {
     return (
       <div>
-        <ul id="file-list">
-          {this.state.fileMetadataList.map((fileMetadata) => (
-            <li
-              role={DownloadFileComponent.listItemRole}
-              className="file-list-item"
-              key={`file-list-li-${fileMetadata.filename}`}
-            >
-              <input type="checkbox"></input>
-              <span>{fileMetadata.filename}</span>
-              <button
-                type="submit"
-                onClick={() =>
-                  this.handleClickDownloadButton(fileMetadata.filename)
-                }
+        <table id="file-table">
+          <tbody>
+            {this.state.fileMetadataList.map((fileMetadata) => (
+              <tr
+                role={DownloadFileComponent.listItemRole}
+                className="file-list-item"
+                key={`file-list-li-${fileMetadata.Key}`} // fileMetaData.Key
               >
-                download
-              </button>
-              <button
-                type="submit"
-                // onClick={}
-              >
-                delete(not implemented yet)
-              </button>
-            </li>
-          ))}
-        </ul>
+                <td>{fileMetadata.Key.padEnd(55, String.fromCharCode(160))}</td>
+                <td>
+                  <button
+                    role="download-button"
+                    value={`${fileMetadata.Key}`}
+                    onClick={(e) => this.onClickDownload(e)}
+                  >
+                    다운로드
+                  </button>
+                </td>
+                <td>
+                  <button
+                    role="delete-button"
+                    value={`${fileMetadata.Key}`}
+                    onClick={(e) => this.onClickDelete(e)}
+                  >
+                    삭제
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }
 
-  private async handleClickDownloadButton(filename: string) {
-    const downloadUrl: string = await this.props.fileManager.getDownloadUrl(
-      filename,
-    );
-    return downloadUrl;
+  private async onClickDelete(e: React.MouseEvent) {
+    const filename = ((e.target as HTMLElement) as HTMLButtonElement).value;
+    const deleteUrl = await this.props.fileManager.deleteFile(filename);
+    this.setState({
+      fileMetadataList: await this.props.fileManager.getFileMetadataList(),
+    });
+  }
+
+  private async onClickDownload(e: React.MouseEvent) {
+    const filename = ((e.target as HTMLElement) as HTMLButtonElement).value;
+    const downloadUrl = await this.props.fileManager.getDownloadUrl(filename);
+    const aTag = document.createElement("a");
+    document.body.appendChild(aTag);
+    aTag.download = filename;
+    aTag.href = downloadUrl;
+    aTag.click();
+    aTag.remove();
   }
 }

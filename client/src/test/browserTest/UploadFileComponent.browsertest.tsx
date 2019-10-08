@@ -6,7 +6,7 @@ import { render, fireEvent } from "@testing-library/react";
 import UploadFileComponent from "src/components/UploadFileComponent";
 import { generateTestBlob } from "src/test/browserTest/FileManager.browsertest";
 
-describe("<UploadFileComponent/> with MockFileManager", () => {
+describe("<UploadFileComponent/>", () => {
   test("check whether number of fileschosen are same with number of list", async () => {
     const fileManager: MockFileManager = new MockFileManager();
     const blob = await generateTestBlob();
