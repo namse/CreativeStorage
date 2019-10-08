@@ -15,10 +15,12 @@ export default class S3FileManager implements IFileManager {
     );
     const presignedPost = JSON.parse(await response.text());
     const form = new FormData();
+
     Object.keys(presignedPost.fields).forEach((key) => {
       form.append(key, presignedPost.fields[key]);
     });
     form.append("file", file);
+
     const uploadResponse = await fetch(presignedPost.url, {
       method: "POST",
       body: form,

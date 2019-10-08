@@ -78,11 +78,15 @@ export default class DownloadFileComponent extends React.Component<
   private async onClickDownload(e: React.MouseEvent) {
     const filename = ((e.target as HTMLElement) as HTMLButtonElement).value;
     const downloadUrl = await this.props.fileManager.getDownloadUrl(filename);
+
+    // Create Anchor Tag to donwload file by clicking link
     const aTag = document.createElement("a");
     document.body.appendChild(aTag);
+
     aTag.download = filename;
     aTag.href = downloadUrl;
     aTag.click();
+
     aTag.remove();
   }
 }

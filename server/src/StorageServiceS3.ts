@@ -54,12 +54,12 @@ export default class StorageService implements IStorageService {
     return presignedPostData;
   }
 
-  public getFileMetadataList(): Promise<fileMetadata[]> {
+  public async getFileMetadataList(): Promise<fileMetadata[]> {
+    const params = {
+      Bucket: envModule.AWS_BUCKETNAME,
+      MaxKeys: 1000,
+    };
     return new Promise((resolve, reject) => {
-      const params = {
-        Bucket: envModule.AWS_BUCKETNAME,
-        MaxKeys: 1000,
-      };
       s3.listObjectsV2(params as AWS.S3.ListObjectsV2Request, (err, data) => {
         if (err) {
           reject(err);
