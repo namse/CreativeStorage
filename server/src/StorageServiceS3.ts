@@ -59,14 +59,30 @@ export default class StorageService implements IStorageService {
       Bucket: envModule.AWS_BUCKETNAME,
       MaxKeys: 1000,
     };
-    return new Promise((resolve, reject) => {
-      s3.listObjectsV2(params as AWS.S3.ListObjectsV2Request, (err, data) => {
-        if (err) {
-          reject(err);
-          return;
+
+    const data = await s3
+      .listObjectsV2(params as AWS.S3.ListObjectsV2Request)
+      .promise();
+    const returnDataList: fileMetadata[] = [];
+
+    if (data.Contents !== undefined) {
+      data.Contents.forEach((content, index) => {
+        returnDataList[index] = { owner: { displayName: "", id: "" } };
+        returnDataList[index].eTag = content.ETag;
+        returnDataList[index].key = content.Key;
+        returnDataList[index].lastModified = content.LastModified;
+        if (
+          content.Owner !== undefined &&
+          returnDataList[index].owner !== undefined
+        ) {
+          returnDataList[index].owner.displayName = content.Owner.DisplayName;
+          returnDataList[index].owner.id = content.Owner.ID;
         }
-        resolve(data.Contents);
+        returnDataList[index].size = content.Size;
+        returnDataList[index].storageClass = content.StorageClass;
       });
-    });
+    }
+
+    return returnDataList;
   }
 }

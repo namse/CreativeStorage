@@ -38,13 +38,13 @@ export default class DownloadFileComponent extends React.Component<
               <tr
                 role={DownloadFileComponent.listItemRole}
                 className="file-list-item"
-                key={`file-list-li-${fileMetadata.Key}`} // fileMetaData.Key
+                key={`file-list-li-${fileMetadata.key}`} // fileMetaData.Key
               >
-                <td>{fileMetadata.Key.padEnd(55, String.fromCharCode(160))}</td>
+                <td>{fileMetadata.key.padEnd(55, String.fromCharCode(160))}</td>
                 <td>
                   <button
                     role="download-button"
-                    value={`${fileMetadata.Key}`}
+                    value={`${fileMetadata.key}`}
                     onClick={(e) => this.onClickDownload(e)}
                   >
                     다운로드
@@ -53,7 +53,7 @@ export default class DownloadFileComponent extends React.Component<
                 <td>
                   <button
                     role="delete-button"
-                    value={`${fileMetadata.Key}`}
+                    value={`${fileMetadata.key}`}
                     onClick={(e) => this.onClickDelete(e)}
                   >
                     삭제

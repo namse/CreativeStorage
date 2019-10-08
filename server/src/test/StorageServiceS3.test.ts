@@ -118,6 +118,6 @@ describe(`${storageService.constructor.name} test`, () => {
       ? (expectedStorageClass = RegExp(/STANDARD/))
       : (expectedStorageClass = RegExp(/STANDARD_IA|DEEP_ARCHIVE/));
 
-    expect(contents[0].StorageClass).toMatch(expectedStorageClass);
+    expect(contents[0].storageClass).toMatch(expectedStorageClass);
   });
 });

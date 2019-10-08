@@ -6,14 +6,14 @@ export type preSignedPostData = {
 };
 
 export type fileMetadata = {
-  Key?: string;
-  LastModified?: Date;
-  ETag?: string;
-  Size?: number;
-  StorageClass?: string;
-  Owner?: {
-    DisplayName?: string;
-    ID?: string;
+  key?: string;
+  lastModified?: Date;
+  eTag?: string;
+  size?: number;
+  storageClass?: string;
+  owner: {
+    displayName?: string;
+    id?: string;
   };
 };
 
