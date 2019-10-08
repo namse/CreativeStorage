@@ -55,14 +55,12 @@ export default class StorageService implements IStorageService {
   }
 
   public async getFileMetadataList(): Promise<fileMetadata[]> {
-    const params = {
+    const params: AWS.S3.ListObjectsV2Request = {
       Bucket: envModule.AWS_BUCKETNAME,
       MaxKeys: 1000,
     };
 
-    const data = await s3
-      .listObjectsV2(params as AWS.S3.ListObjectsV2Request)
-      .promise();
+    const data = await s3.listObjectsV2(params).promise();
     const returnDataList: fileMetadata[] = [];
 
     if (data.Contents !== undefined) {
