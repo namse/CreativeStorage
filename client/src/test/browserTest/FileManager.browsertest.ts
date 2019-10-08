@@ -1,9 +1,8 @@
 import { it, describe } from "src/test/browserTest/settings/it";
 import expect from "expect";
 import uuid from "uuid/v4";
-import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
-import MockFileManager from "src/FileManager/MockFileManager";
-import FileManager from "src/FileManager/FileManager";
+import IFileManager from "src/FileManager/IFileManager";
+import S3FileManager from "src/FileManager/S3FileManager";
 
 export function b64EncodeUnicode(value: string) {
   return btoa(
@@ -24,23 +23,13 @@ export async function generateTestBlob(
   return response.blob();
 }
 
-const testTargetFileManagers: IFileManager[] = [
-  new MockFileManager(),
-  new FileManager(),
-];
+const testTargetFileManagers: IFileManager[] = [new S3FileManager()];
+const filename = uuid() + ".txt";
 
 testTargetFileManagers.forEach((fileManager) => {
   describe(`File Manager(${fileManager.constructor.name})`, () => {
-    it(`should upload file without error(${fileManager.constructor.name})`, async () => {
-      const testBlob = await generateTestBlob();
-      const filename = uuid();
-      const file = new File([testBlob], filename);
-      await fileManager.uploadFile(file);
-    });
-
     it(`should upload file and download(${fileManager.constructor.name})`, async () => {
       const testBlob = await generateTestBlob();
-      const filename = uuid();
       const file = new File([testBlob], filename);
       await fileManager.uploadFile(file);
 
@@ -53,21 +42,30 @@ testTargetFileManagers.forEach((fileManager) => {
     });
 
     it(`should upload file and check it in list(${fileManager.constructor.name})`, async () => {
-      const testBlob = await generateTestBlob();
-      const filename = uuid();
-      const file = new File([testBlob], filename);
-      await fileManager.uploadFile(file);
-
       const fileMetadataList = await fileManager.getFileMetadataList();
 
-      const expectedMetadata: FileMetadata = {
-        filename,
-      };
       const actualMetadata = fileMetadataList.find(
-        (metadata) => metadata.filename === filename,
+        (metadata) => metadata.Key === filename,
       );
+
+      expect(actualMetadata).toHaveProperty("Key");
+      expect(actualMetadata).toHaveProperty("LastModified");
+      expect(actualMetadata).toHaveProperty("ETag");
+      expect(actualMetadata).toHaveProperty("Size");
+      expect(actualMetadata).toHaveProperty("StorageClass");
+      expect(actualMetadata).toHaveProperty("Owner");
       expect(actualMetadata).not.toBeUndefined();
-      expect(expectedMetadata).toEqual(actualMetadata);
+    });
+
+    it(`should delete file(${fileManager.constructor.name})`, async () => {
+      await fileManager.deleteFile(filename);
+      const fileMetadataList = await fileManager.getFileMetadataList();
+
+      const actualMetadata = fileMetadataList.find(
+        (metadata) => metadata.Key === filename,
+      );
+
+      expect(actualMetadata).toBe(undefined);
     });
   });
 });

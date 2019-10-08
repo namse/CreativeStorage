@@ -1,18 +1,21 @@
 import koaBody from "koa-body";
 import Koa from "koa";
-import router from "./router";
+import applyRouter from "./router";
 import cors from "@koa/cors";
+import StorageServiceS3 from "./StorageServiceS3";
+
+const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
 
 export const app = new Koa();
 
 app.use(cors());
-app.use(koaBody({
-  multipart: true,
-}));
+app.use(
+  koaBody({
+    multipart: true,
+  }),
+);
 
-app.use(router);
-
-const PORT: number = process.env.NODE_ENV === "production" ? 4001 : 4002;
+applyRouter(app, new StorageServiceS3());
 
 app.use(async (ctx, next) => {
   ctx.status = 404;

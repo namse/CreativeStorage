@@ -1,6 +1,6 @@
 import * as React from "react";
 import DownloadFileComponent from "src/components/DownloadFileComponent";
-import FileManager from "src/FileManager/FileManager";
+import S3FileManager from "src/FileManager/S3FileManager";
 
 export default class FileListAndDownloadPage extends React.Component {
   public render() {
@@ -8,7 +8,7 @@ export default class FileListAndDownloadPage extends React.Component {
       <div>
         Download Files
         <DownloadFileComponent
-          fileManager={new FileManager()}
+          fileManager={new S3FileManager()}
         ></DownloadFileComponent>
       </div>
     );
