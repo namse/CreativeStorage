@@ -9,14 +9,14 @@ const s3 = new AWS.S3({
   accessKeyId: envModule.AWS_ACCESS_KEY,
   secretAccessKey: envModule.AWS_SECRET_ACCESS_KEY,
   // endpoint: envModule.AWS_S3_BUCKET_ENDPOINT, // why doesn't need option-endpoint
-  region: "PLEASE INPUT YOUR S3 REGION",
+  region: envModule.AWS_REGION,
   signatureVersion: "v4",
 });
 
 export default class StorageService implements IStorageService {
   public getUrlForDownloadFile(filename: string): string {
     const params = {
-      Bucket: "PLEASE INPUT YOUR BUCKET NAME",
+      Bucket: envModule.AWS_BUCKETNAME,
       Key: filename,
       Expires: 60,
       ResponseContentDisposition: "attatchment",
@@ -28,7 +28,7 @@ export default class StorageService implements IStorageService {
 
   public getUrlForDeleteFile(filename: string): string {
     const params = {
-      Bucket: "PLEASE INPUT YOUR BUCKET NAME",
+      Bucket: envModule.AWS_BUCKETNAME,
       Key: filename,
       Expires: 60,
     };
@@ -41,7 +41,7 @@ export default class StorageService implements IStorageService {
     contentType: string,
   ): preSignedPostData {
     const params = {
-      Bucket: "PLEASE INPUT YOUR BUCKET NAME",
+      Bucket: envModule.AWS_BUCKETNAME,
       Key: filename,
       Expires: 60,
       Fields: {
@@ -57,7 +57,7 @@ export default class StorageService implements IStorageService {
   public getFileMetadataList(): Promise<fileMetadata[]> {
     return new Promise((resolve, reject) => {
       const params = {
-        Bucket: "PLEASE INPUT YOUR BUCKET NAME",
+        Bucket: envModule.AWS_BUCKETNAME,
         MaxKeys: 1000,
       };
       s3.listObjectsV2(params as AWS.S3.ListObjectsV2Request, (err, data) => {
