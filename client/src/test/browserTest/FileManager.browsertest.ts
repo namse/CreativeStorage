@@ -41,7 +41,7 @@ testTargetFileManagers.forEach((fileManager) => {
       expect(testBlob).toEqual(blob);
     });
 
-    it(`should upload file and check it in list(${fileManager.constructor.name})`, async () => {
+    it(`should be file in list(${fileManager.constructor.name})`, async () => {
       const fileMetadataList = await fileManager.getFileMetadataList();
 
       const actualMetadata = fileMetadataList.find(
