@@ -1,4 +1,5 @@
 import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
+import uuid from "uuid/v5";
 
 export default class S3FileManager implements IFileManager {
   public async getDownloadUrl(filename: string): Promise<string> {
@@ -20,27 +21,35 @@ export default class S3FileManager implements IFileManager {
       form.append(key, presignedPost.fields[key]);
     });
     form.append("file", file);
-    const taregetTag = document.querySelector(
-      `.progress-${1}`,
-    ) as HTMLSpanElement;
-    await new Promise((resolve, reject) => {
-      const req = new XMLHttpRequest();
-      req.upload.addEventListener("progress", (event) => {
-        if (event.lengthComputable) {
-          taregetTag.innerText =
-            "percentage : " + ((event.loaded / event.total) * 100).toFixed(2);
-        }
-      });
-      req.upload.addEventListener("load", (event) => {
-        resolve(req.response);
-      });
-      req.upload.addEventListener("error", (event) => {
-        reject(req.response);
-      });
 
-      req.open("POST", presignedPost.url);
-      req.send(form);
-    });
+    const progressTagClassName = uuid(file.name, Array(16))
+      .replace(/\./g, "")
+      .replace(/\-/g, "");
+
+    const targetTag = document.getElementsByClassName(
+      `${progressTagClassName}`,
+    )[0];
+    if (targetTag !== null) {
+      await new Promise((resolve, reject) => {
+        const req = new XMLHttpRequest();
+        req.upload.addEventListener("progress", (event) => {
+          if (event.lengthComputable) {
+            targetTag.innerHTML =
+              "   percentage : " +
+              ((event.loaded / event.total) * 100).toFixed(2);
+          }
+        });
+        req.upload.addEventListener("load", (event) => {
+          resolve(req.response);
+        });
+        req.upload.addEventListener("error", (event) => {
+          reject(req.response);
+        });
+
+        req.open("POST", presignedPost.url);
+        req.send(form);
+      });
+    }
   }
 
   public async getFileMetadataList(): Promise<FileMetadata[]> {

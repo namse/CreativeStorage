@@ -1,5 +1,7 @@
 import * as React from "react";
+import uuid from "uuid/v5";
 import IFileManager from "src/FileManager/IFileManager";
+
 type State = {
   files: File[];
 };
@@ -18,7 +20,6 @@ export default class UploadFileComponent extends React.Component<
       files: [],
     };
     this.sendRequest = this.sendRequest.bind(this);
-    this.renderProgressTable = this.renderProgressTable.bind(this);
   }
   public render() {
     return (
@@ -36,6 +37,9 @@ export default class UploadFileComponent extends React.Component<
           </div>
           <ul className="file-list">
             {this.state.files.map((file) => {
+              const progressTagClassName = uuid(file.name, Array(16))
+                .replace(/\./g, "")
+                .replace(/\-/g, "");
               return (
                 <li
                   key={`file-${file.name}`}
@@ -43,6 +47,7 @@ export default class UploadFileComponent extends React.Component<
                   role="file-name"
                 >
                   <span className="filename">{file.name}</span>
+                  <span className={progressTagClassName}></span>
                 </li>
               );
             })}
@@ -56,7 +61,6 @@ export default class UploadFileComponent extends React.Component<
         >
           send
         </button>
-        <div className="progress"></div>
       </div>
     );
   }
@@ -73,48 +77,30 @@ export default class UploadFileComponent extends React.Component<
 
   private async sendFiles(): Promise<void> {
     const promises = this.state.files.map((file) => this.sendRequest(file));
-    const progressTag = document.querySelector(".progress");
-    if (progressTag !== null) {
-      progressTag.innerHTML = "";
-    }
-    this.renderProgressTable(this.state.files);
     await Promise.all(promises);
-    this.onClickClearList();
   }
 
   private async sendRequest(file: File): Promise<void> {
     await this.props.fileManager.uploadFile(file);
   }
 
-  private renderProgressTable(files: File[]): void {
-    const progressDiv = document.querySelector(".progress");
-    if (progressDiv !== null) {
-      files.forEach((file, index) => {
-        const divTag = document.createElement("div");
-        divTag.className = "progress";
-        const filenameTag = document.createElement("span");
-        const progressTag = document.createElement("span");
-        filenameTag.innerText = file.name;
-        progressTag.className = `progress-${1}`;
-        divTag.appendChild(filenameTag);
-        divTag.appendChild(progressTag);
-        progressDiv.appendChild(divTag);
-      });
-    }
-  }
-
   private onClickClearList(): void {
     this.setState({ files: [] });
+
     const ElInputTag = document.getElementsByClassName(
       "file-input",
     )[0] as HTMLInputElement;
+
     ElInputTag.value = "";
   }
 
   private fileListToArray(files: FileList): File[] {
     const array: File[] = [];
-    Array.prototype.forEach.call(files, (file) => {
-      if (files !== null) {
+    const filenames = this.state.files.map((file) => {
+      return file.name;
+    });
+    Array.from(files).forEach((file) => {
+      if (files !== null && !filenames.includes(file.name)) {
         array.push(file);
       }
     });
