@@ -45,7 +45,7 @@ testTargetFileManagers.forEach((fileManager) => {
       const fileMetadataList = await fileManager.getFileMetadataList();
 
       const actualMetadata = fileMetadataList.find(
-        (metadata) => metadata.Key === filename,
+        (metadata) => metadata.key === filename,
       );
 
       expect(actualMetadata).toHaveProperty("Key");
@@ -62,7 +62,7 @@ testTargetFileManagers.forEach((fileManager) => {
       const fileMetadataList = await fileManager.getFileMetadataList();
 
       const actualMetadata = fileMetadataList.find(
-        (metadata) => metadata.Key === filename,
+        (metadata) => metadata.key === filename,
       );
 
       expect(actualMetadata).toBe(undefined);
