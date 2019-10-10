@@ -1,7 +1,5 @@
 import { start, stop } from "../ServerlessUtil";
 import fetch from "node-fetch";
-import uuid = require("uuid");
-import { generateTestBlob } from "../../../client/src/test/browserTest/FileManager.browsertest";
 import { envModule } from "../config/.env";
 import { fileMetadata } from "src/IStorageService";
 
