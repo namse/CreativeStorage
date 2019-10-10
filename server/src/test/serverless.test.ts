@@ -72,7 +72,7 @@ describe("servereless", () => {
     const serverStatus: boolean = await healthCheck();
     if (serverStatus) {
       const fileMetadataList: fileMetadata[] = await getFileMetadataList();
-      const filename: string = fileMetadataList[0].key;
+      const filename: string | undefined = fileMetadataList[0].key;
       const response = await fetch(encodeURI(`${endpoint}/downloadfileurl?filename=${(filename)}`));
       expect(response.status).toEqual(200);
     } else {
