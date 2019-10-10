@@ -20,6 +20,9 @@ export default function applyRouter(
   controller.router.get("/deletefileurl", (ctx: Koa.Context) =>
     controller.getUrlForDeleteFile(ctx),
   );
+  controller.router.post("/putbucketlifecycle", (ctx: Koa.Context) =>
+    controller.putBucketLifecycleConfiguration(ctx),
+  );
 
   app.use(controller.router.routes());
   app.use(controller.router.allowedMethods());

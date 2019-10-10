@@ -33,4 +33,12 @@ export default class Controller extends Router {
     );
     ctx.status = 200;
   }
+
+  public putBucketLifecycleConfiguration(ctx: Koa.Context) {
+    ctx.body = this.storageService.putBucketLifecycleConfiguration(
+      ctx.request.query.days,
+      ctx.request.query.storageClass,
+    );
+    ctx.status = 200;
+  }
 }

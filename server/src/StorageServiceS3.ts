@@ -83,4 +83,49 @@ export default class StorageService implements IStorageService {
 
     return returnDataList;
   }
+
+  public putBucketLifecycleConfiguration(days: string, storageClass: string) {
+    const params: AWS.S3.PutBucketLifecycleConfigurationRequest = {
+      Bucket: envModule.AWS_BUCKETNAME,
+      LifecycleConfiguration: {
+        Rules: [ /* required */
+          {
+            Prefix: "",
+            Status: "Enabled",
+            Expiration: {
+              Days: 3560,
+            },
+            ID: "S3toGlacier2",
+            NoncurrentVersionExpiration: {
+              NoncurrentDays: 60,
+            },
+            NoncurrentVersionTransitions: [
+              {
+                NoncurrentDays: 30,
+                StorageClass: storageClass,
+              },
+            ],
+            Transitions: [
+              {
+                Days: +days,
+                StorageClass: storageClass,
+              },
+            ],
+          },
+          /* more items */
+        ],
+      },
+    };
+
+    return new Promise((resolve, reject) => {
+      s3.putBucketLifecycleConfiguration(params,
+        (err, data) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(data);
+        });
+    });
+  }
 }

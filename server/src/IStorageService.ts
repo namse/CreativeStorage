@@ -25,4 +25,5 @@ export default interface IStorageService {
     contentType: string,
   ): preSignedPostData;
   getFileMetadataList(): Promise<fileMetadata[]>;
+  putBucketLifecycleConfiguration(days: string, storageClass: string): object;
 }
