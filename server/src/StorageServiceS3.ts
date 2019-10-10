@@ -5,6 +5,8 @@ import IStorageService, {
 } from "./IStorageService";
 import AWS from "aws-sdk";
 import { envModule } from "./config/.env";
+import { Router } from "express";
+import { EMLINK } from "constants";
 
 const s3 = new AWS.S3({
   accessKeyId: envModule.AWS_ACCESS_KEY,
@@ -109,19 +111,26 @@ export default class StorageService implements IStorageService {
     };
 
     const putObjectPromise = await s3.putBucketLifecycleConfiguration(params).promise();
+    console.log(putObjectPromise);
     return putObjectPromise;
   }
 
-  public async getBucketLifecycleConfiguration() {
+  public async getBucketLifecycleConfiguration(): Promise<LifecycleRule | undefined> {
     const params: AWS.S3.GetBucketLifecycleConfigurationRequest = {
       Bucket: envModule.AWS_BUCKETNAME,
     };
 
-    const getBucketLifecycleConfiguration = await s3.putBucketLifecycleConfiguration(params).promise();
-    console.log("여기", getBucketLifecycleConfiguration);
-    const lifecycleRule: LifecycleRule[] = [];
+    const getBucketLifecycleConfiguration = await s3.getBucketLifecycleConfiguration(params).promise();
     const data = getBucketLifecycleConfiguration.$response.data;
-    console.log(data);
-    return { data };
+
+    let lifeCycle: LifecycleRule | undefined = {};
+    if (data !== undefined) {
+      const Rules: LifecycleRule[] | undefined = data.Rules;
+
+      if (Rules !== undefined) {
+        lifeCycle = Rules[0];
+      }
+    }
+    return lifeCycle;
   }
 }

@@ -48,7 +48,7 @@ export interface LifecycleRuleFilter {
 export interface LifecycleExpiration {
   Date?: Date;
   Days?: number;
-  ExpiredObjectDeleteMarker?: string;
+  ExpiredObjectDeleteMarker?: boolean;
 }
 
 export interface LifecycleRule {
@@ -56,7 +56,7 @@ export interface LifecycleRule {
   ID?: string;
   Prefix?: string;
   Filter?: LifecycleRuleFilter;
-  Status: string;
+  Status?: string;
   Transitions?: Transition[];
   NoncurrentVersionTransitions?: NoncurrentVersionTransition[];
   NoncurrentVersionExpiration?: {
@@ -75,6 +75,6 @@ export default interface IStorageService {
     contentType: string,
   ): preSignedPostData;
   getFileMetadataList(): Promise<fileMetadata[]>;
-  putBucketLifecycleConfiguration(days: string): object;
-  getBucketLifecycleConfiguration(): object;
+  putBucketLifecycleConfiguration(days: string): Promise<object>;
+  getBucketLifecycleConfiguration(): Promise<LifecycleRule | undefined>;
 }
