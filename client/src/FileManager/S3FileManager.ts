@@ -35,8 +35,7 @@ export default class S3FileManager implements IFileManager {
         req.upload.addEventListener("progress", (event) => {
           if (event.lengthComputable) {
             targetTag.innerHTML =
-              "   percentage : " +
-              ((event.loaded / event.total) * 100).toFixed(2);
+              "percentage : " + ((event.loaded / event.total) * 100).toFixed(2);
           }
         });
         req.upload.addEventListener("load", (event) => {

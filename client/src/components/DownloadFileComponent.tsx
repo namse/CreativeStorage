@@ -40,7 +40,6 @@ export default class DownloadFileComponent extends React.Component<
                 className="file-list-item"
                 key={`file-list-li-${fileMetadata.Key}`} // fileMetaData.Key
               >
-                <td>{fileMetadata.Key.padEnd(55, String.fromCharCode(160))}</td>
                 <td>
                   <button
                     role="download-button"
@@ -59,6 +58,7 @@ export default class DownloadFileComponent extends React.Component<
                     삭제
                   </button>
                 </td>
+                <td>{fileMetadata.Key.padEnd(90, String.fromCharCode(160))}</td>
               </tr>
             ))}
           </tbody>

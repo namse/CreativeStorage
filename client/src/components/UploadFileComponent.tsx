@@ -14,12 +14,18 @@ export default class UploadFileComponent extends React.Component<
   UploadFilePagePropsType,
   State
 > {
+  private isFileUploadStarted: boolean;
+  private isAllFilesUploaded: boolean;
   public constructor(props: UploadFilePagePropsType) {
     super(props);
     this.state = {
       files: [],
     };
+    this.isAllFilesUploaded = false;
+    this.isFileUploadStarted = false;
+    this.openPopUp = this.openPopUp.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
+    this.checkFileUploadDone = this.checkFileUploadDone.bind(this);
   }
   public render() {
     return (
@@ -35,23 +41,31 @@ export default class UploadFileComponent extends React.Component<
               onChange={(e) => this.handleFileAdded(e)}
             />
           </div>
-          <ul className="file-list">
-            {this.state.files.map((file) => {
-              const progressTagClassName = uuid(file.name, Array(16))
-                .replace(/\./g, "")
-                .replace(/\-/g, "");
-              return (
-                <li
-                  key={`file-${file.name}`}
-                  className="file-name"
-                  role="file-name"
-                >
-                  <span className="filename">{file.name}</span>
-                  <span className={progressTagClassName}></span>
-                </li>
-              );
-            })}
-          </ul>
+          <table className="file-list">
+            <tbody>
+              {this.state.files.map((file) => {
+                const progressTagClassName = uuid(file.name, Array(16))
+                  .replace(/\./g, "")
+                  .replace(/\-/g, "");
+                return (
+                  <tr
+                    key={`file-${file.name}`}
+                    className="file"
+                    role="file-name"
+                  >
+                    <td>
+                      <span className="filename">
+                        {file.name.padEnd(90, String.fromCharCode(160))}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={progressTagClassName}></span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
         <button onClick={() => this.onClickClearList()}>clear</button>
         <button
@@ -61,23 +75,47 @@ export default class UploadFileComponent extends React.Component<
         >
           send
         </button>
+        <button onClick={() => window.location.reload()}>
+          cancle upload(refresh)
+        </button>
       </div>
     );
   }
 
   private handleFileAdded(event: React.ChangeEvent<HTMLInputElement>) {
-    const files = event.target.files;
-    if (files) {
-      const array = this.fileListToArray(files);
-      this.setState((prevState) => ({
-        files: [...prevState.files, ...array],
-      }));
+    this.isAllFilesUploaded = this.checkFileUploadDone();
+    this.isFileUploadStarted = this.checkFileUploadStarted();
+
+    if (this.isFileUploadStarted && this.isAllFilesUploaded) {
+      this.onClickClearList();
+    }
+
+    if (this.isFileUploadStarted && !this.isAllFilesUploaded) {
+      this.openPopUp();
+      const inputTag = document.querySelector(
+        ".file-input",
+      ) as HTMLInputElement;
+      inputTag.value = "";
+    } else {
+      const files = event.target.files;
+      if (files) {
+        const array = this.fileListToArray(files);
+        this.setState((prevState) => ({
+          files: [...prevState.files, ...array],
+        }));
+      }
     }
   }
 
   private async sendFiles(): Promise<void> {
-    const promises = this.state.files.map((file) => this.sendRequest(file));
-    await Promise.all(promises);
+    this.isAllFilesUploaded = this.checkFileUploadDone();
+    this.isFileUploadStarted = this.checkFileUploadStarted();
+    if (this.isFileUploadStarted && !this.isAllFilesUploaded) {
+      this.openPopUp();
+    } else {
+      const promises = this.state.files.map((file) => this.sendRequest(file));
+      await Promise.all(promises);
+    }
   }
 
   private async sendRequest(file: File): Promise<void> {
@@ -85,13 +123,68 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private onClickClearList(): void {
-    this.setState({ files: [] });
+    this.isAllFilesUploaded = this.checkFileUploadDone();
+    this.isFileUploadStarted = this.checkFileUploadStarted();
+    if (this.isFileUploadStarted && !this.isAllFilesUploaded) {
+      this.openPopUp();
+    } else {
+      this.setState({ files: [] });
 
-    const ElInputTag = document.getElementsByClassName(
-      "file-input",
-    )[0] as HTMLInputElement;
+      const ElInputTag = document.getElementsByClassName(
+        "file-input",
+      )[0] as HTMLInputElement;
 
-    ElInputTag.value = "";
+      ElInputTag.value = "";
+    }
+  }
+
+  private openPopUp() {
+    const modeless = window.open(
+      "",
+      "popup",
+      "width=100,height=30,menubar=0,status=0,titlebar=0,top=350,left=800",
+    );
+    if (modeless !== null) {
+      modeless.document.body.innerHTML = "";
+      modeless.document.write("파일 전송이 완료될 때까지 기다려 주십시오");
+    }
+  }
+
+  private checkFileUploadStarted() {
+    const fileListToUpload = document.querySelectorAll(".file");
+    let isFileUploadStarted: boolean = false;
+
+    if (fileListToUpload.length !== 0) {
+      isFileUploadStarted = Array.from(fileListToUpload).every((liTag) => {
+        // it's not started file transfer yet
+        if ((liTag.children[1] as HTMLSpanElement).innerText !== "") {
+          return true;
+        }
+      });
+    }
+
+    return isFileUploadStarted;
+  }
+
+  private checkFileUploadDone() {
+    const fileListToUpload = document.querySelectorAll(".file");
+    let isAllFilesUploaded: boolean = false;
+
+    if (fileListToUpload.length !== 0) {
+      isAllFilesUploaded = Array.from(fileListToUpload).every((liTag) => {
+        if (
+          (liTag.children[1] as HTMLSpanElement).innerText ===
+          "percentage : 100.00"
+        ) {
+          // it's not completed file transfer yet
+          return true;
+        }
+      });
+    } else {
+      isAllFilesUploaded = true;
+    }
+
+    return isAllFilesUploaded;
   }
 
   private fileListToArray(files: FileList): File[] {
@@ -99,11 +192,13 @@ export default class UploadFileComponent extends React.Component<
     const filenames = this.state.files.map((file) => {
       return file.name;
     });
+
     Array.from(files).forEach((file) => {
       if (files !== null && !filenames.includes(file.name)) {
         array.push(file);
       }
     });
+
     return array;
   }
 }
