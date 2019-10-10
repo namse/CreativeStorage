@@ -1,0 +1,59 @@
+service: 
+  name: CreativeStorage # service name
+
+# Add serverless-offline
+plugins:
+  - serverless-plugin-typescript
+  - serverless-plugin-include-dependencies
+  - serverless-offline
+
+provider: 
+  name: aws
+  runtime: nodejs10.x
+  region : ap-northeast-2
+  stage: development
+
+custom:
+  myStage: ${opt:stage, self:provider.stage}
+  myRegion: ${opt:region, self:provider.region}
+  serverless-offline:
+    port: ${file(./src/config/serverlessConfig.json):${self:custom.myStage}.port}   
+
+functions:
+  app:
+    handler: src/serverless.handler 
+    events:
+      - http:
+          path: /filemetadatalist
+          method: get
+      - http:
+          path: /uploadfileurl
+          method: get
+      - http:
+          path: /downloadfileurl
+          method: get     
+      - http:
+          path: /deletefileurl
+          method: get
+      - http:
+          path: /health
+          method: get                                 
+    cors:
+      origin: '*'   
+
+package:
+  exclude: 
+    - node_modules/** # no need to add this yourself, this plugin does it for you
+    - ./client/**
+    - ./server/src/test/**
+    - ./server/.build/**
+    - ./server/.vscode/**
+    - ./server/dist/**
+    - .gitignore
+    - .editorconfig
+    - jest.config.js
+    - yarn.lock
+    - package.json
+    - package-lock.json
+  include:
+        

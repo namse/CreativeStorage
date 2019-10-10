@@ -28,6 +28,11 @@ export default function applyRouter(
     controller.getBucketLifecycleConfiguration(ctx),
   );
 
+  controller.router.get("/health", (ctx: Koa.Context) => {
+    ctx.body = "OK";
+    ctx.status = 200;
+  });
+
   app.use(controller.router.routes());
   app.use(controller.router.allowedMethods());
 }
