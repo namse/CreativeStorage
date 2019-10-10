@@ -37,7 +37,6 @@ export default class Controller extends Router {
   public putBucketLifecycleConfiguration(ctx: Koa.Context) {
     ctx.body = this.storageService.putBucketLifecycleConfiguration(
       ctx.request.query.days,
-      ctx.request.query.storageClass,
     );
     ctx.status = 200;
   }

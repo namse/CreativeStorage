@@ -84,7 +84,7 @@ export default class StorageService implements IStorageService {
     return returnDataList;
   }
 
-  public putBucketLifecycleConfiguration(days: string, storageClass: string) {
+  public async putBucketLifecycleConfiguration(days: string) {
     const params: AWS.S3.PutBucketLifecycleConfigurationRequest = {
       Bucket: envModule.AWS_BUCKETNAME,
       LifecycleConfiguration: {
@@ -95,37 +95,19 @@ export default class StorageService implements IStorageService {
             Expiration: {
               Days: 3560,
             },
-            ID: "S3toGlacier2",
-            NoncurrentVersionExpiration: {
-              NoncurrentDays: 60,
-            },
-            NoncurrentVersionTransitions: [
-              {
-                NoncurrentDays: 30,
-                StorageClass: storageClass,
-              },
-            ],
+            ID: "S3toDEEP_ARCHIVE",
             Transitions: [
               {
                 Days: +days,
-                StorageClass: storageClass,
+                StorageClass: "DEEP_ARCHIVE",
               },
             ],
           },
-          /* more items */
         ],
       },
     };
 
-    return new Promise((resolve, reject) => {
-      s3.putBucketLifecycleConfiguration(params,
-        (err, data) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(data);
-        });
-    });
+    const putObjectPromise = await s3.putBucketLifecycleConfiguration(params).promise();
+    return putObjectPromise;
   }
 }
