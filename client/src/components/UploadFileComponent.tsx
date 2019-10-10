@@ -1,9 +1,18 @@
 import * as React from "react";
-import uuid from "uuid/v5";
 import IFileManager from "src/FileManager/IFileManager";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import uuid from "uuid/v5";
+import "src/stylesheets/UploadFileComponent.css";
 
+import {
+  faSearch,
+  faShareSquare,
+  faBackspace,
+  faBan,
+} from "@fortawesome/free-solid-svg-icons";
 type State = {
   files: File[];
+  uploading: boolean;
 };
 
 type UploadFilePagePropsType = {
@@ -16,75 +25,100 @@ export default class UploadFileComponent extends React.Component<
 > {
   private isFileUploadStarted: boolean;
   private isAllFilesUploaded: boolean;
+  private fileInputRef: React.RefObject<HTMLInputElement>;
   public constructor(props: UploadFilePagePropsType) {
     super(props);
+    this.fileInputRef = React.createRef();
     this.state = {
       files: [],
+      uploading: false,
     };
     this.isAllFilesUploaded = false;
     this.isFileUploadStarted = false;
-    this.openPopUp = this.openPopUp.bind(this);
+    this.onClickClearList = this.onClickClearList.bind(this);
+    this.handleFileAdded = this.handleFileAdded.bind(this);
+    this.sendFiles = this.sendFiles.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
     this.checkFileUploadDone = this.checkFileUploadDone.bind(this);
+    this.openFileDialog = this.openFileDialog.bind(this);
+    this.checkFileUploadStarted = this.checkFileUploadStarted.bind(this);
   }
   public render() {
     return (
       <div className="upload">
-        <span className="title">Upload Files</span>
-        <div className="content">
-          <div>
-            <input
-              role="file-input"
-              className="file-input"
-              type="file"
-              multiple
-              onChange={(e) => this.handleFileAdded(e)}
-            />
+        <input
+          ref={this.fileInputRef}
+          role="file-input"
+          className="file-input"
+          type="file"
+          multiple
+          onChange={this.handleFileAdded}
+        />
+        <div className="button-wrapper">
+          <div
+            className={`browser-button ${this.state.uploading === true &&
+              "button-blur"}`}
+            onClick={this.openFileDialog}
+          >
+            <div className="search-icon">
+              <FontAwesomeIcon icon={faSearch} size="2x" />
+              <span className="search-text">search</span>
+            </div>
           </div>
-          <table className="file-list">
-            <tbody>
-              {this.state.files.map((file) => {
-                const progressTagClassName = uuid(file.name, Array(16))
-                  .replace(/\./g, "")
-                  .replace(/\-/g, "");
-                return (
-                  <tr
-                    key={`file-${file.name}`}
-                    className="file"
-                    role="file-name"
-                  >
-                    <td>
-                      <span className="filename">
-                        {file.name.padEnd(90, String.fromCharCode(160))}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={progressTagClassName}></span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <button onClick={this.onClickClearList} className="clear-file-button">
+            <div className="clear-icon">
+              <FontAwesomeIcon icon={faBackspace} size="2x" />
+              <span className="clear-text">clear</span>
+            </div>
+          </button>
+          <button
+            onClick={this.sendFiles}
+            className="send-file-button"
+            role="send-file"
+          >
+            <div className="clear-icon">
+              <FontAwesomeIcon icon={faShareSquare} size="2x" />
+              <span className="clear-text">send</span>
+            </div>
+          </button>
+          <button
+            onClick={() => window.location.reload()}
+            className="cancel-upload-button"
+          >
+            <div className="cancel-icon">
+              <FontAwesomeIcon icon={faBan} size="2x" />
+              <span className="cancel-text">uploadCancel</span>
+            </div>
+          </button>
         </div>
-        <button onClick={() => this.onClickClearList()}>clear</button>
-        <button
-          onClick={() => this.sendFiles()}
-          className="send-file"
-          role="send-file"
-        >
-          send
-        </button>
-        <button onClick={() => window.location.reload()}>
-          cancle upload(refresh)
-        </button>
+        <ul className="file-list">
+          {this.state.files.map((file) => {
+            const progressTagClassName = uuid(file.name, Array(16))
+              .replace(/\./g, "")
+              .replace(/\-/g, "");
+            return (
+              <li
+                key={`file-${file.name}`}
+                className="file-name"
+                role="file-name"
+              >
+                <span className="percentage">
+                  <span className={progressTagClassName}></span>
+                </span>
+                <div className="upload-filename">{file.name}</div>
+
+                <div className="upload-full-filename">{file.name}</div>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     );
   }
 
   private handleFileAdded(event: React.ChangeEvent<HTMLInputElement>) {
-    this.checkFileUploadDone();
-    this.checkFileUploadStarted();
+    this.isAllFilesUploaded = this.checkFileUploadDone();
+    this.isFileUploadStarted = this.checkFileUploadStarted();
 
     if (this.isFileUploadStarted && this.isAllFilesUploaded) {
       this.onClickClearList();
@@ -108,11 +142,8 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private async sendFiles(): Promise<void> {
-    this.checkFileUploadDone();
-    this.checkFileUploadStarted();
-    console.log(this.isFileUploadStarted);
-    console.log(this.isAllFilesUploaded);
-
+    this.isAllFilesUploaded = this.checkFileUploadDone();
+    this.isFileUploadStarted = this.checkFileUploadStarted();
     if (this.isFileUploadStarted && !this.isAllFilesUploaded) {
       this.openPopUp();
     } else {
@@ -126,9 +157,8 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private onClickClearList(): void {
-    this.checkFileUploadDone();
-    this.checkFileUploadStarted();
-
+    this.isAllFilesUploaded = this.checkFileUploadDone();
+    this.isFileUploadStarted = this.checkFileUploadStarted();
     if (this.isFileUploadStarted && !this.isAllFilesUploaded) {
       this.openPopUp();
     } else {
@@ -155,27 +185,27 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private checkFileUploadStarted() {
-    const fileListToUpload = document.querySelectorAll(".file");
+    const fileListToUpload = document.querySelectorAll(".file-name");
 
     if (fileListToUpload.length !== 0) {
       this.isFileUploadStarted = Array.from(fileListToUpload).every((liTag) => {
         // it's not started file transfer yet
-        if ((liTag.children[1] as HTMLSpanElement).innerText !== "") {
+        if ((liTag.children[0] as HTMLSpanElement).innerText !== "") {
           return true;
         }
       });
-    } else {
-      this.isFileUploadStarted = false;
     }
+
+    return this.isFileUploadStarted;
   }
 
   private checkFileUploadDone() {
-    const fileListToUpload = document.querySelectorAll(".file");
+    const fileListToUpload = document.querySelectorAll(".file-name");
 
     if (fileListToUpload.length !== 0) {
       this.isAllFilesUploaded = Array.from(fileListToUpload).every((liTag) => {
         if (
-          (liTag.children[1] as HTMLSpanElement).innerText ===
+          (liTag.children[0] as HTMLSpanElement).innerText ===
           "percentage : 100.00"
         ) {
           // it's not completed file transfer yet
@@ -183,8 +213,10 @@ export default class UploadFileComponent extends React.Component<
         }
       });
     } else {
-      this.isAllFilesUploaded = false;
+      this.isAllFilesUploaded = true;
     }
+
+    return this.isAllFilesUploaded;
   }
 
   private fileListToArray(files: FileList): File[] {
@@ -200,5 +232,11 @@ export default class UploadFileComponent extends React.Component<
     });
 
     return array;
+  }
+
+  private openFileDialog(): void {
+    if (this.fileInputRef.current !== null) {
+      this.fileInputRef.current.click();
+    }
   }
 }

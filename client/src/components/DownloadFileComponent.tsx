@@ -32,37 +32,35 @@ export default class DownloadFileComponent extends React.Component<
   public render() {
     return (
       <div>
-        <table id="file-table">
-          <tbody>
-            {this.state.fileMetadataList.map((fileMetadata) => (
-              <tr
-                role={DownloadFileComponent.listItemRole}
-                className="file-list-item"
-                key={`file-list-li-${fileMetadata.key}`} // fileMetaData.Key
+        {this.state.fileMetadataList.map((fileMetadata) => (
+          <div
+            role={DownloadFileComponent.listItemRole}
+            className="file-list-item"
+            key={`file-list-li-${fileMetadata.Key}`} // fileMetaData.Key
+          >
+            <div className="download-filename">{fileMetadata.Key}</div>
+            <div className="show-download-fullname">{fileMetadata.Key}</div>
+            <span className="download-button-wrapper">
+              <button
+                role="download-button"
+                className="download-button"
+                value={`${fileMetadata.Key}`}
+                onClick={(e) => this.onClickDownload(e)}
               >
-                <td>
-                  <button
-                    role="download-button"
-                    value={`${fileMetadata.key}`}
-                    onClick={(e) => this.onClickDownload(e)}
-                  >
-                    다운로드
-                  </button>
-                </td>
-                <td>
-                  <button
-                    role="delete-button"
-                    value={`${fileMetadata.key}`}
-                    onClick={(e) => this.onClickDelete(e)}
-                  >
-                    삭제
-                  </button>
-                </td>
-                <td>{fileMetadata.key.padEnd(90, String.fromCharCode(160))}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                donwload
+              </button>
+
+              <button
+                role="delete-button"
+                className="delete-button"
+                value={`${fileMetadata.Key}`}
+                onClick={(e) => this.onClickDelete(e)}
+              >
+                delete
+              </button>
+            </span>
+          </div>
+        ))}
       </div>
     );
   }

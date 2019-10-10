@@ -1,0 +1,13 @@
+.download-wrapper {
+  position: absolute;
+  top: 150px;
+  left: 350px;
+}
+
+.download-filename:hover + .show-download-fullname {
+  display: block;
+}
+
+.clicked {
+  background-color: rgb(230, 223, 211, 1);
+}
