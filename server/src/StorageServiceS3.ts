@@ -5,8 +5,6 @@ import IStorageService, {
 } from "./IStorageService";
 import AWS from "aws-sdk";
 import { envModule } from "./config/.env";
-import { Router } from "express";
-import { EMLINK } from "constants";
 
 const s3 = new AWS.S3({
   accessKeyId: envModule.AWS_ACCESS_KEY,
