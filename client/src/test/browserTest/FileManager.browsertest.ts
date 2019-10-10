@@ -34,10 +34,8 @@ testTargetFileManagers.forEach((fileManager) => {
       await fileManager.uploadFile(file);
 
       const url = await fileManager.getDownloadUrl(filename);
-
       const response = await fetch(url);
       const blob = await response.blob();
-
       expect(testBlob).toEqual(blob);
     });
 
@@ -48,12 +46,12 @@ testTargetFileManagers.forEach((fileManager) => {
         (metadata) => metadata.key === filename,
       );
 
-      expect(actualMetadata).toHaveProperty("Key");
-      expect(actualMetadata).toHaveProperty("LastModified");
-      expect(actualMetadata).toHaveProperty("ETag");
-      expect(actualMetadata).toHaveProperty("Size");
-      expect(actualMetadata).toHaveProperty("StorageClass");
-      expect(actualMetadata).toHaveProperty("Owner");
+      expect(actualMetadata).toHaveProperty("key");
+      expect(actualMetadata).toHaveProperty("lastModified");
+      expect(actualMetadata).toHaveProperty("eTag");
+      expect(actualMetadata).toHaveProperty("size");
+      expect(actualMetadata).toHaveProperty("storageClass");
+      expect(actualMetadata).toHaveProperty("owner");
       expect(actualMetadata).not.toBeUndefined();
     });
 

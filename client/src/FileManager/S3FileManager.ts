@@ -22,12 +22,6 @@ export default class S3FileManager implements IFileManager {
     });
     form.append("file", file);
 
-<<<<<<< HEAD
-    const uploadResponse = await fetch(presignedPost.url, {
-      method: "POST",
-      body: form,
-    });
-=======
     const progressTagClassName = uuid(file.name, Array(16))
       .replace(/\./g, "")
       .replace(/\-/g, "");
@@ -39,7 +33,7 @@ export default class S3FileManager implements IFileManager {
       await new Promise((resolve, reject) => {
         const req = new XMLHttpRequest();
         req.upload.addEventListener("progress", (event) => {
-          if (event.lengthComputable) {
+          if (event.lengthComputable && targetTag !== undefined) {
             targetTag.innerHTML =
               "percentage : " + ((event.loaded / event.total) * 100).toFixed(2);
           }
@@ -55,7 +49,6 @@ export default class S3FileManager implements IFileManager {
         req.send(form);
       });
     }
->>>>>>> feature/upload-progress
   }
 
   public async getFileMetadataList(): Promise<FileMetadata[]> {
