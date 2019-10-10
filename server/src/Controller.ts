@@ -40,4 +40,9 @@ export default class Controller extends Router {
     );
     ctx.status = 200;
   }
+
+  public getBucketLifecycleConfiguration(ctx: Koa.Context) {
+    ctx.body = this.storageService.getBucketLifecycleConfiguration();
+    ctx.status = 200;
+  }
 }

@@ -24,6 +24,10 @@ export default function applyRouter(
     controller.putBucketLifecycleConfiguration(ctx),
   );
 
+  controller.router.get("/getbucketlifecycle", (ctx: Koa.Context) =>
+    controller.getBucketLifecycleConfiguration(ctx),
+  );
+
   app.use(controller.router.routes());
   app.use(controller.router.allowedMethods());
 }

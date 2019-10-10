@@ -1,6 +1,7 @@
 import IStorageService, {
   preSignedPostData,
   fileMetadata,
+  LifecycleRule,
 } from "./IStorageService";
 import AWS from "aws-sdk";
 import { envModule } from "./config/.env";
@@ -109,5 +110,18 @@ export default class StorageService implements IStorageService {
 
     const putObjectPromise = await s3.putBucketLifecycleConfiguration(params).promise();
     return putObjectPromise;
+  }
+
+  public async getBucketLifecycleConfiguration() {
+    const params: AWS.S3.GetBucketLifecycleConfigurationRequest = {
+      Bucket: envModule.AWS_BUCKETNAME,
+    };
+
+    const getBucketLifecycleConfiguration = await s3.putBucketLifecycleConfiguration(params).promise();
+    console.log("여기", getBucketLifecycleConfiguration);
+    const lifecycleRule: LifecycleRule[] = [];
+    const data = getBucketLifecycleConfiguration.$response.data;
+    console.log(data);
+    return { data };
   }
 }
