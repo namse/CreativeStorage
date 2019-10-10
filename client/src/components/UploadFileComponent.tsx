@@ -83,8 +83,8 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private handleFileAdded(event: React.ChangeEvent<HTMLInputElement>) {
-    this.isAllFilesUploaded = this.checkFileUploadDone();
-    this.isFileUploadStarted = this.checkFileUploadStarted();
+    this.checkFileUploadDone();
+    this.checkFileUploadStarted();
 
     if (this.isFileUploadStarted && this.isAllFilesUploaded) {
       this.onClickClearList();
@@ -108,8 +108,11 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private async sendFiles(): Promise<void> {
-    this.isAllFilesUploaded = this.checkFileUploadDone();
-    this.isFileUploadStarted = this.checkFileUploadStarted();
+    this.checkFileUploadDone();
+    this.checkFileUploadStarted();
+    console.log(this.isFileUploadStarted);
+    console.log(this.isAllFilesUploaded);
+
     if (this.isFileUploadStarted && !this.isAllFilesUploaded) {
       this.openPopUp();
     } else {
@@ -123,8 +126,9 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private onClickClearList(): void {
-    this.isAllFilesUploaded = this.checkFileUploadDone();
-    this.isFileUploadStarted = this.checkFileUploadStarted();
+    this.checkFileUploadDone();
+    this.checkFileUploadStarted();
+
     if (this.isFileUploadStarted && !this.isAllFilesUploaded) {
       this.openPopUp();
     } else {
@@ -152,26 +156,24 @@ export default class UploadFileComponent extends React.Component<
 
   private checkFileUploadStarted() {
     const fileListToUpload = document.querySelectorAll(".file");
-    let isFileUploadStarted: boolean = false;
 
     if (fileListToUpload.length !== 0) {
-      isFileUploadStarted = Array.from(fileListToUpload).every((liTag) => {
+      this.isFileUploadStarted = Array.from(fileListToUpload).every((liTag) => {
         // it's not started file transfer yet
         if ((liTag.children[1] as HTMLSpanElement).innerText !== "") {
           return true;
         }
       });
+    } else {
+      this.isFileUploadStarted = false;
     }
-
-    return isFileUploadStarted;
   }
 
   private checkFileUploadDone() {
     const fileListToUpload = document.querySelectorAll(".file");
-    let isAllFilesUploaded: boolean = false;
 
     if (fileListToUpload.length !== 0) {
-      isAllFilesUploaded = Array.from(fileListToUpload).every((liTag) => {
+      this.isAllFilesUploaded = Array.from(fileListToUpload).every((liTag) => {
         if (
           (liTag.children[1] as HTMLSpanElement).innerText ===
           "percentage : 100.00"
@@ -181,10 +183,8 @@ export default class UploadFileComponent extends React.Component<
         }
       });
     } else {
-      isAllFilesUploaded = true;
+      this.isAllFilesUploaded = false;
     }
-
-    return isAllFilesUploaded;
   }
 
   private fileListToArray(files: FileList): File[] {

@@ -3,16 +3,30 @@ import UploadFilePage from "src/pages/UploadFilePage";
 import DownloadFilePage from "src/pages/DownloadFilePage";
 
 type HomePagePropsType = {};
-type State = {};
+type HomePageStatesType = {
+  downloadComponent: HTMLElement | null;
+  uploadComponent: HTMLElement | null;
+};
 
 export default class HomePage extends React.Component<
   HomePagePropsType,
-  State
+  HomePageStatesType
 > {
   private downloadFilePage: React.RefObject<DownloadFilePage>;
   public constructor(props: HomePagePropsType) {
     super(props);
     this.downloadFilePage = React.createRef();
+    this.state = {
+      downloadComponent: null,
+      uploadComponent: null,
+    };
+  }
+
+  public componentDidMount() {
+    this.setState({
+      downloadComponent: document.querySelector(".download-page"),
+      uploadComponent: document.querySelector(".upload-page"),
+    });
   }
 
   public render() {
@@ -37,13 +51,11 @@ export default class HomePage extends React.Component<
   }
 
   private handleClickedButtonDownload() {
-    const downloadComponent = document.querySelector(".download-page");
-    const uploadComponent = document.querySelector(".upload-page");
-    if (downloadComponent !== null) {
-      downloadComponent.setAttribute("style", "");
+    if (this.state.downloadComponent !== null) {
+      this.state.downloadComponent.setAttribute("style", "");
     }
-    if (uploadComponent !== null) {
-      uploadComponent.setAttribute("style", "display: none;");
+    if (this.state.uploadComponent !== null) {
+      this.state.uploadComponent.setAttribute("style", "display: none;");
     }
     if (this.downloadFilePage.current !== null) {
       this.downloadFilePage.current.update();
@@ -51,13 +63,11 @@ export default class HomePage extends React.Component<
   }
 
   private handleClickedButtonUpload() {
-    const downloadComponent = document.querySelector(".download-page");
-    const uploadComponent = document.querySelector(".upload-page");
-    if (downloadComponent !== null) {
-      downloadComponent.setAttribute("style", "display: none;");
+    if (this.state.downloadComponent !== null) {
+      this.state.downloadComponent.setAttribute("style", "display: none;");
     }
-    if (uploadComponent !== null) {
-      uploadComponent.setAttribute("style", "");
+    if (this.state.uploadComponent !== null) {
+      this.state.uploadComponent.setAttribute("style", "");
     }
   }
 }
