@@ -20,7 +20,8 @@ export default function applyRouter(
   controller.router.get("/deletefileurl", (ctx: Koa.Context) =>
     controller.getUrlForDeleteFile(ctx),
   );
-  controller.router.get("/", (ctx, next) => {
+  controller.router.get("/health", (ctx: Koa.Context) => {
+    ctx.body = "OK";
     ctx.status = 200;
   });
 

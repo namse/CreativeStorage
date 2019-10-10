@@ -1,9 +1,13 @@
 import { start, stop } from "../ServerlessUtil";
 import fetch from "node-fetch";
-import { envModule } from "../config/.env";
 import { fileMetadata } from "src/IStorageService";
 
-const endpoint: string = envModule.LOCALTESTIP;
+/*
+serverless use aws profile 
+please make sure that serverless config 
+serverless config credentials --provider aws --key your_access_key --secret youraccess_secret_key
+*/
+const endpoint: string = "http://localhost:4002";
 
 export async function getTest(testUrl: string): Promise<boolean> {
   const response = await fetch(testUrl);
@@ -21,9 +25,8 @@ async function getFileMetadataList(): Promise<fileMetadata[]> {
 }
 
 async function healthCheck(): Promise<boolean> {
-  const url = endpoint;
 
-  const response = await fetch(url);
+  const response = await fetch(endpoint + "/health");
   let status: boolean = false;
 
   if (!response.ok) {

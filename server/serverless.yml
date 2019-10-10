@@ -36,7 +36,7 @@ functions:
           path: /deletefileurl
           method: get
       - http:
-          path: /
+          path: /health
           method: get                                 
     cors:
       origin: '*'   
