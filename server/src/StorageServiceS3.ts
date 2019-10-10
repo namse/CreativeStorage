@@ -116,6 +116,7 @@ export default class StorageService implements IStorageService {
   }
 
   public async getBucketLifecycleConfiguration(): Promise<LifecycleRule | undefined> {
+
     const params: AWS.S3.GetBucketLifecycleConfigurationRequest = {
       Bucket: envModule.AWS_BUCKETNAME,
     };
