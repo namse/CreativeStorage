@@ -1,4 +1,5 @@
 import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
+import uuid from "uuid/v5";
 
 export default class S3FileManager implements IFileManager {
   public async getDownloadUrl(filename: string): Promise<string> {
@@ -21,10 +22,40 @@ export default class S3FileManager implements IFileManager {
     });
     form.append("file", file);
 
+<<<<<<< HEAD
     const uploadResponse = await fetch(presignedPost.url, {
       method: "POST",
       body: form,
     });
+=======
+    const progressTagClassName = uuid(file.name, Array(16))
+      .replace(/\./g, "")
+      .replace(/\-/g, "");
+
+    const targetTag = document.getElementsByClassName(
+      `${progressTagClassName}`,
+    )[0];
+    if (targetTag !== null) {
+      await new Promise((resolve, reject) => {
+        const req = new XMLHttpRequest();
+        req.upload.addEventListener("progress", (event) => {
+          if (event.lengthComputable) {
+            targetTag.innerHTML =
+              "percentage : " + ((event.loaded / event.total) * 100).toFixed(2);
+          }
+        });
+        req.upload.addEventListener("load", (event) => {
+          resolve(req.response);
+        });
+        req.upload.addEventListener("error", (event) => {
+          reject(req.response);
+        });
+
+        req.open("POST", presignedPost.url);
+        req.send(form);
+      });
+    }
+>>>>>>> feature/upload-progress
   }
 
   public async getFileMetadataList(): Promise<FileMetadata[]> {
