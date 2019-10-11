@@ -38,9 +38,6 @@ export interface LifecycleRuleFilter {
   Tag?: Tag;
   And?: {
     Prefix?: string;
-    /**
-     * All of these tags must exist in the object's tag set in order for the rule to apply.
-     */
     Tags?: Tag[];
   };
 }
