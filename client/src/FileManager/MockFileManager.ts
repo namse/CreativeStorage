@@ -1,4 +1,7 @@
-import IFileManager, { FileMetadata } from "src/FileManager/IFileManager";
+import IFileManager, {
+  FileMetadata,
+  LifecycleRule,
+} from "src/FileManager/IFileManager";
 
 export default class MockFileManager implements IFileManager {
   private mockFileRepository: {
@@ -41,6 +44,18 @@ export default class MockFileManager implements IFileManager {
 
   public async getFileMetadataList(): Promise<FileMetadata[]> {
     return Object.values(this.mockFileRepository).map((info) => info.metadata);
+  }
+
+  public async changeLifecycle(days: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      resolve();
+    });
+  }
+
+  public async getLifecycleConfiguration(): Promise<LifecycleRule> {
+    return new Promise((resolve, reject) => {
+      resolve({} as LifecycleRule);
+    });
   }
 
   private async convertFileToDataUrl(file: Blob): Promise<string> {
