@@ -1,0 +1,195 @@
+@font-face {
+  font-family: "Zilla-Slab-regular";
+
+  src: url("../../public/ZillaSlab-Regular.ttf") format("truetype");
+}
+
+.file-input {
+  display: none;
+}
+
+.button-wrapper {
+  position: relative;
+  top: 100px;
+  margin-top: 60px;
+}
+
+.browser-button {
+  font-family: Zilla-Slab-regular;
+  position: absolute;
+  left: 650px;
+  top: 1px;
+  cursor: pointer;
+  height: 50px;
+  width: 120px;
+  border: 3px solid black;
+  border-radius: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.browser-button:hover {
+  background-color: rgb(230, 223, 211, 1);
+}
+
+.button-blur {
+  opacity: 0.5;
+}
+
+.search-icon {
+  right: 85px;
+  font-size: 15px;
+  position: absolute;
+}
+
+.search-text {
+  font-size: 25px;
+  left: 35px;
+  bottom: 3px;
+  position: absolute;
+}
+
+.clear-file-button {
+  font-family: Zilla-Slab-regular;
+  font-size: 25px;
+  position: absolute;
+  background-color: #ffff;
+  left: 820px;
+  top: 1px;
+  cursor: pointer;
+  height: 57px;
+  width: 120px;
+  border: 3px solid black;
+  border-radius: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.clear-file-button:hover {
+  background-color: rgb(230, 223, 211, 1);
+}
+
+.clear-icon {
+  right: 75px;
+  font-size: 15px;
+  position: absolute;
+}
+
+.clear-text {
+  font-size: 25px;
+  left: 45px;
+  bottom: 3px;
+  position: absolute;
+}
+
+.send-file-button {
+  font-family: Zilla-Slab-regular;
+  font-size: 25px;
+  position: absolute;
+  background-color: #ffff;
+  left: 980px;
+  top: 1px;
+  cursor: pointer;
+  height: 57px;
+  width: 120px;
+  border: 3px solid black;
+  border-radius: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.clear-icon {
+  right: 75px;
+  font-size: 15px;
+  position: absolute;
+}
+
+.clear-text {
+  font-size: 25px;
+  left: 45px;
+  bottom: 3px;
+  position: absolute;
+}
+
+.file-list {
+  position: absolute;
+  top: 250px;
+}
+
+.file-name {
+  font-size: 30px;
+  width: 100px;
+  padding: 20px;
+  font-family: Zilla-Slab-regular;
+  border-bottom: 1px solid black;
+  width: 1000px;
+}
+
+.upload-filename {
+  width: 700px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-full-filename {
+  width: 600px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  display: none;
+  font-size: 10px;
+  margin-top: 10px;
+  padding: 5px;
+  text-transform: uppercase;
+}
+
+.percentage {
+  position: absolute;
+  left: 800px;
+}
+
+.upload-filename:hover + .upload-full-filename {
+  display: block;
+}
+
+.send-file-button:hover {
+  background-color: rgb(230, 223, 211, 1);
+}
+
+.cancel-upload-button {
+  font-family: Zilla-Slab-regular;
+  font-size: 25px;
+  position: absolute;
+  background-color: #ffff;
+  left: 1130px;
+  top: 1px;
+  cursor: pointer;
+  height: 57px;
+  width: 190px;
+  border: 3px solid black;
+  border-radius: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.cancel-upload-button:hover {
+  background-color: rgb(230, 223, 211, 1);
+}
+.cancel-icon {
+  right: 154px;
+  font-size: 15px;
+  position: absolute;
+}
+
+.cancel-text {
+  font-size: 25px;
+  left: 33px;
+  bottom: 3px;
+  position: absolute;
+}
