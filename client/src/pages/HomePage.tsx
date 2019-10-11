@@ -86,10 +86,8 @@ export default class HomePage extends React.Component<
       ".select-lifecycle",
     ) as HTMLSelectElement;
     const periodToChange = Number(elInputPeriod.value);
-    console.log(periodToChange);
     const response = await this.fileManager.changeLifecycle(periodToChange);
     const lifeCycleRule = await this.fileManager.getLifecycleConfiguration();
-    console.log(lifeCycleRule.Transitions[0].Days);
     this.setState((prevState) => ({
       lifecycle: lifeCycleRule.Transitions[0].Days,
     }));
