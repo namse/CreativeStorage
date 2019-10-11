@@ -3,13 +3,13 @@ import IFileManager from "src/FileManager/IFileManager";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import uuid from "uuid/v5";
 import "src/stylesheets/UploadFileComponent.css";
-
 import {
   faSearch,
   faShareSquare,
   faBackspace,
   faBan,
 } from "@fortawesome/free-solid-svg-icons";
+
 type State = {
   files: File[];
   uploading: boolean;
@@ -23,18 +23,21 @@ export default class UploadFileComponent extends React.Component<
   UploadFilePagePropsType,
   State
 > {
-  private isFileUploadStarted: boolean;
-  private isAllFilesUploaded: boolean;
+  private isFileUploadStarted: boolean = false;
+  private isAllFilesUploaded: boolean = false;
   private fileInputRef: React.RefObject<HTMLInputElement>;
+  private filesToUpload: React.RefObject<HTMLLIElement>;
+
   public constructor(props: UploadFilePagePropsType) {
     super(props);
     this.fileInputRef = React.createRef();
+    this.filesToUpload = React.createRef();
     this.state = {
       files: [],
       uploading: false,
     };
-    this.isAllFilesUploaded = false;
-    this.isFileUploadStarted = false;
+    // this.fileListItems = []
+
     this.onClickClearList = this.onClickClearList.bind(this);
     this.handleFileAdded = this.handleFileAdded.bind(this);
     this.sendFiles = this.sendFiles.bind(this);
@@ -65,7 +68,11 @@ export default class UploadFileComponent extends React.Component<
               <span className="search-text">search</span>
             </div>
           </div>
-          <button onClick={this.onClickClearList} className="clear-file-button">
+          <button
+            onClick={this.onClickClearList}
+            className={`clear-file-button
+          ${this.state.uploading === true && "button-blur"}`}
+          >
             <div className="clear-icon">
               <FontAwesomeIcon icon={faBackspace} size="2x" />
               <span className="clear-text">clear</span>
@@ -73,7 +80,8 @@ export default class UploadFileComponent extends React.Component<
           </button>
           <button
             onClick={this.sendFiles}
-            className="send-file-button"
+            className={`send-file-button ${this.state.uploading === true &&
+              "button-blur"}`}
             role="send-file"
           >
             <div className="clear-icon">
@@ -91,27 +99,7 @@ export default class UploadFileComponent extends React.Component<
             </div>
           </button>
         </div>
-        <ul className="file-list">
-          {this.state.files.map((file) => {
-            const progressTagClassName = uuid(file.name, Array(16))
-              .replace(/\./g, "")
-              .replace(/\-/g, "");
-            return (
-              <li
-                key={`file-${file.name}`}
-                className="file-name"
-                role="file-name"
-              >
-                <span className="percentage">
-                  <span className={progressTagClassName}></span>
-                </span>
-                <div className="upload-filename">{file.name}</div>
-
-                <div className="upload-full-filename">{file.name}</div>
-              </li>
-            );
-          })}
-        </ul>
+        <ul className="file-list">{this.makefileListItems()}</ul>
       </div>
     );
   }
@@ -142,6 +130,7 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private async sendFiles(): Promise<void> {
+    this.setState({ uploading: true });
     this.isAllFilesUploaded = this.checkFileUploadDone();
     this.isFileUploadStarted = this.checkFileUploadStarted();
     if (this.isFileUploadStarted && !this.isAllFilesUploaded) {
@@ -149,6 +138,7 @@ export default class UploadFileComponent extends React.Component<
     } else {
       const promises = this.state.files.map((file) => this.sendRequest(file));
       await Promise.all(promises);
+      this.setState({ uploading: false });
     }
   }
 
@@ -200,25 +190,30 @@ export default class UploadFileComponent extends React.Component<
   }
 
   private checkFileUploadDone() {
-    const fileListToUpload = document.querySelectorAll(".file-name");
+    if (this.filesToUpload.current !== null) {
+      const fileListToUpload = this.filesToUpload.current.querySelectorAll(
+        ".file-name",
+      );
 
-    if (fileListToUpload.length !== 0) {
-      this.isAllFilesUploaded = Array.from(fileListToUpload).every((liTag) => {
-        if (
-          (liTag.children[0] as HTMLSpanElement).innerText ===
-          "percentage : 100.00"
-        ) {
-          // it's not completed file transfer yet
-          return true;
-        }
-      });
-    } else {
-      this.isAllFilesUploaded = true;
+      if (fileListToUpload.length !== 0) {
+        this.isAllFilesUploaded = Array.from(fileListToUpload).every(
+          (liTag) => {
+            if (
+              (liTag.children[0] as HTMLSpanElement).innerText ===
+              "percentage : 100.00"
+            ) {
+              // it's not completed file transfer yet
+              return true;
+            }
+          },
+        );
+      } else {
+        this.isAllFilesUploaded = true;
+      }
+
+      return this.isAllFilesUploaded;
     }
-
-    return this.isAllFilesUploaded;
   }
-
   private fileListToArray(files: FileList): File[] {
     const array: File[] = [];
     const filenames = this.state.files.map((file) => {
@@ -238,5 +233,28 @@ export default class UploadFileComponent extends React.Component<
     if (this.fileInputRef.current !== null) {
       this.fileInputRef.current.click();
     }
+  }
+
+  private makefileListItems(): JSX.Element[] {
+    return this.state.files.map((file) => {
+      const progressTagClassName = uuid(file.name, Array(16))
+        .replace(/\./g, "")
+        .replace(/\-/g, "");
+      return (
+        <li
+          key={`file-${file.name}`}
+          className="file-name"
+          role="file-name"
+          ref={this.filesToUpload}
+        >
+          <span className="percentage">
+            <span className={progressTagClassName}></span>
+          </span>
+          <div className="upload-filename">{file.name}</div>
+
+          <div className="upload-full-filename">{file.name}</div>
+        </li>
+      );
+    });
   }
 }

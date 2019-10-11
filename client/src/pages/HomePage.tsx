@@ -47,33 +47,8 @@ export default class HomePage extends React.Component<{}, HomePageStateType> {
           src="http://icons.iconarchive.com/icons/vexels/office/72/bulb-icon.png"
         />
         <div className="logo">Creative Storage</div>
-
-        <div className="button-wrapper">
-          <button
-            className={`route-button hover ${this.state.currentPage ===
-              "download" && "clicked"}`}
-            value="download"
-            onClick={this.onClickDownloadButton}
-          >
-            <span className="icon">
-              <FontAwesomeIcon icon={faCloudDownloadAlt} size="3x" />
-            </span>
-            <span className="button-text">Download</span>
-          </button>
-        </div>
-        <div className="button-wrapper">
-          <button
-            className={`route-button hover ${this.state.currentPage ===
-              "upload" && "clicked"}`}
-            value="upload"
-            onClick={this.onClickUploadButton}
-          >
-            <span className="icon">
-              <FontAwesomeIcon icon={faCloudUploadAlt} size="3x" />
-            </span>
-            <span className="button-text">Upload</span>
-          </button>
-        </div>
+        {this.makeDownloadButton()}
+        <div className="button-wrapper">{this.makeUploadButton()}</div>
         <div className="download-page" style={visible}>
           <DownloadFilePage ref={this.downloadFilePage} />
         </div>
@@ -109,5 +84,41 @@ export default class HomePage extends React.Component<{}, HomePageStateType> {
     if (this.state.uploadComponent !== null) {
       this.state.uploadComponent.setAttribute("style", "");
     }
+  }
+
+  private makeDownloadButton(): JSX.Element {
+    return (
+      <div className="button-wrapper">
+        <button
+          className={`route-button hover ${this.state.currentPage ===
+            "download" && "clicked"}`}
+          value="download"
+          onClick={this.onClickDownloadButton}
+        >
+          <span className="icon">
+            <FontAwesomeIcon icon={faCloudDownloadAlt} size="3x" />
+          </span>
+          <span className="button-text">Download</span>
+        </button>
+      </div>
+    );
+  }
+
+  private makeUploadButton(): JSX.Element {
+    return (
+      <div className="Upload-button">
+        <button
+          className={`route-button hover ${this.state.currentPage ===
+            "upload" && "clicked"}`}
+          value="upload"
+          onClick={this.onClickUploadButton}
+        >
+          <span className="icon">
+            <FontAwesomeIcon icon={faCloudUploadAlt} size="3x" />
+          </span>
+          <span className="button-text">Upload</span>
+        </button>
+      </div>
+    );
   }
 }

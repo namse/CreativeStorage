@@ -21,6 +21,8 @@ export default class DownloadFileComponent extends React.Component<
     this.state = {
       fileMetadataList: [],
     };
+    this.onClickDelete = this.onClickDelete.bind(this);
+    this.onClickDownload = this.onClickDownload.bind(this);
   }
 
   public async componentDidMount() {
@@ -36,16 +38,16 @@ export default class DownloadFileComponent extends React.Component<
           <div
             role={DownloadFileComponent.listItemRole}
             className="file-list-item"
-            key={`file-list-li-${fileMetadata.Key}`} // fileMetaData.Key
+            key={`file-list-li-${fileMetadata.key}`} // fileMetaData.Key
           >
-            <div className="download-filename">{fileMetadata.Key}</div>
-            <div className="show-download-fullname">{fileMetadata.Key}</div>
+            <div className="download-filename">{fileMetadata.key}</div>
+            <div className="show-download-fullname">{fileMetadata.key}</div>
             <span className="download-button-wrapper">
               <button
                 role="download-button"
                 className="download-button"
-                value={`${fileMetadata.Key}`}
-                onClick={(e) => this.onClickDownload(e)}
+                value={`${fileMetadata.key}`}
+                onClick={this.onClickDownload}
               >
                 donwload
               </button>
@@ -53,8 +55,8 @@ export default class DownloadFileComponent extends React.Component<
               <button
                 role="delete-button"
                 className="delete-button"
-                value={`${fileMetadata.Key}`}
-                onClick={(e) => this.onClickDelete(e)}
+                value={`${fileMetadata.key}`}
+                onClick={this.onClickDelete}
               >
                 delete
               </button>
