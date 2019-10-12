@@ -2,11 +2,6 @@ import { start, stop } from "../ServerlessUtil";
 import fetch from "node-fetch";
 import { fileMetadata } from "src/IStorageService";
 
-/*
-serverless use aws profile 
-please make sure that serverless config 
-serverless config credentials --provider aws --key your_access_key --secret youraccess_secret_key
-*/
 const endpoint: string = "http://localhost:4002";
 
 export async function getTest(testUrl: string): Promise<boolean> {
