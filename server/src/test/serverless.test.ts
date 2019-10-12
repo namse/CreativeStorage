@@ -39,12 +39,12 @@ async function healthCheck(): Promise<boolean> {
 
 describe("servereless", () => {
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     jest.setTimeout(30000);
     await start();
   });
 
-  afterEach(() => {
+  afterAll(() => {
     stop();
   });
 
