@@ -110,8 +110,6 @@ export default class UploadFileComponent extends React.Component<
   private async sendFiles(): Promise<void> {
     this.checkFileUploadDone();
     this.checkFileUploadStarted();
-    console.log(this.isFileUploadStarted);
-    console.log(this.isAllFilesUploaded);
 
     if (this.isFileUploadStarted && !this.isAllFilesUploaded) {
       this.openPopUp();
