@@ -20,6 +20,14 @@ export default function applyRouter(
   controller.router.get("/deletefileurl", (ctx: Koa.Context) =>
     controller.getUrlForDeleteFile(ctx),
   );
+  controller.router.get("/putbucketlifecycle", (ctx: Koa.Context) =>
+    controller.putBucketLifecycleConfiguration(ctx),
+  );
+
+  controller.router.get("/getbucketlifecycle", (ctx: Koa.Context) =>
+    controller.getBucketLifecycleConfiguration(ctx),
+  );
+
   controller.router.get("/health", (ctx: Koa.Context) => {
     ctx.body = "OK";
     ctx.status = 200;

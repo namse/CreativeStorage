@@ -1,6 +1,7 @@
 import IStorageService, {
   preSignedPostData,
   fileMetadata,
+  LifecycleRule,
 } from "./IStorageService";
 import AWS from "aws-sdk";
 import { envModule } from "./config/.env";
@@ -82,5 +83,53 @@ export default class StorageService implements IStorageService {
     }
 
     return returnDataList;
+  }
+
+  public async putBucketLifecycleConfiguration(days: string) {
+    const params: AWS.S3.PutBucketLifecycleConfigurationRequest = {
+      Bucket: envModule.AWS_BUCKETNAME,
+      LifecycleConfiguration: {
+        Rules: [ /* required */
+          {
+            Prefix: "",
+            Status: "Enabled",
+            Expiration: {
+              Days: 3560,
+            },
+            ID: "S3toDEEP_ARCHIVE",
+            Transitions: [
+              {
+                Days: +days,
+                StorageClass: "DEEP_ARCHIVE",
+              },
+            ],
+          },
+        ],
+      },
+    };
+
+    const putObjectPromise = await s3.putBucketLifecycleConfiguration(params).promise();
+    console.log(putObjectPromise);
+    return putObjectPromise;
+  }
+
+  public async getBucketLifecycleConfiguration(): Promise<LifecycleRule | undefined> {
+
+    const params: AWS.S3.GetBucketLifecycleConfigurationRequest = {
+      Bucket: envModule.AWS_BUCKETNAME,
+    };
+
+    const getBucketLifecycleConfiguration = await s3.getBucketLifecycleConfiguration(params).promise();
+    const data = getBucketLifecycleConfiguration.$response.data;
+
+    let lifeCycle: LifecycleRule | undefined = {};
+    if (data !== undefined) {
+      const Rules: LifecycleRule[] | undefined = data.Rules;
+
+      if (Rules !== undefined) {
+        lifeCycle = Rules[0];
+      }
+    }
+    return lifeCycle;
   }
 }

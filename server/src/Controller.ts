@@ -33,4 +33,16 @@ export default class Controller extends Router {
     );
     ctx.status = 200;
   }
+
+  public async putBucketLifecycleConfiguration(ctx: Koa.Context) {
+    ctx.body = await this.storageService.putBucketLifecycleConfiguration(
+      ctx.request.query.days,
+    );
+    ctx.status = 200;
+  }
+
+  public async getBucketLifecycleConfiguration(ctx: Koa.Context) {
+    ctx.body = await this.storageService.getBucketLifecycleConfiguration();
+    ctx.status = 200;
+  }
 }
