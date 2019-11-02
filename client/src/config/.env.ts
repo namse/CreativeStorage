@@ -1,3 +1,3 @@
 export const envModule = {
-  SEVER_ENDPOINT: "PLEASE INPUT",
+  SERVER_ENDPOINT: "PLEASE INPUT",
 };
