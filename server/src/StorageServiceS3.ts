@@ -85,11 +85,11 @@ export default class StorageService implements IStorageService {
     return returnDataList;
   }
 
-  public async putBucketLifecycleConfiguration(days: string) {
+  public async putBucketLifecycleConfiguration(days: string): Promise<{}> {
     const params: AWS.S3.PutBucketLifecycleConfigurationRequest = {
       Bucket: envModule.AWS_BUCKETNAME,
       LifecycleConfiguration: {
-        Rules: [ /* required */
+        Rules: [
           {
             Prefix: "",
             Status: "Enabled",
@@ -108,9 +108,9 @@ export default class StorageService implements IStorageService {
       },
     };
 
-    const putObjectPromise = await s3.putBucketLifecycleConfiguration(params).promise();
-    console.log(putObjectPromise);
-    return putObjectPromise;
+    const result = await s3.putBucketLifecycleConfiguration(params).promise();
+    console.log(result);
+    return result;
   }
 
   public async getBucketLifecycleConfiguration(): Promise<LifecycleRule | undefined> {
@@ -119,15 +119,15 @@ export default class StorageService implements IStorageService {
       Bucket: envModule.AWS_BUCKETNAME,
     };
 
-    const getBucketLifecycleConfiguration = await s3.getBucketLifecycleConfiguration(params).promise();
-    const data = getBucketLifecycleConfiguration.$response.data;
+    const bucketLifecycleConfiguration = await s3.getBucketLifecycleConfiguration(params).promise();
+    const data = bucketLifecycleConfiguration.$response.data;
 
     let lifeCycle: LifecycleRule | undefined = {};
     if (data !== undefined) {
-      const Rules: LifecycleRule[] | undefined = data.Rules;
+      const rules: LifecycleRule[] | undefined = data.Rules;
 
-      if (Rules !== undefined) {
-        lifeCycle = Rules[0];
+      if (rules !== undefined) {
+        lifeCycle = rules[0];
       }
     }
     return lifeCycle;
