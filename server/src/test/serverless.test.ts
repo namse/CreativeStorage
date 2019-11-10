@@ -44,7 +44,7 @@ describe("servereless", () => {
     await start();
   });
 
-  beforeAll(() => {
+  afterAll(() => {
     stop();
   });
 
